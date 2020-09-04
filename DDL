@@ -65,3 +65,34 @@ AS
 	SET NOCOUNT ON;
 	select * from dbo.Produto where nm_prod = @nm_prod;
 GO
+
+-- Procedure para Excluir cadastro de Produto
+CREATE PROCEDURE dbo.del_produto
+	@id_prod INT
+AS
+	SET NOCOUNT ON;
+	DELETE FROM dbo.Produto where id_prod = @id_prod;
+GO
+
+-- Procedure para Atualizar um Produto
+CREATE PROCEDURE dbo.update_prod
+	@id_prod INT,
+	@nm_prod VARCHAR(100)
+AS
+	SET NOCOUNT ON;
+	UPDATE dbo.Produto set nm_prod = @nm_prod where id_prod = @id_prod;
+GO
+
+-- VIEW visualização da tabela de Produtos
+CREATE VIEW dbo.view_produtos
+AS
+select * from dbo.Produto;
+GO
+
+-- VIEW MATERIALIZED
+CREATE MATERIALIZED VIEW dbo.materialized_view_produtos 
+AS
+SELECT id_prod, nm_prod FROM dbo.Produto
+GO
+
+REFRESH MATERIALIZED VIEW EmployeeConfid2;
