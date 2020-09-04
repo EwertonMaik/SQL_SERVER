@@ -16,3 +16,27 @@ GO
 -- Este Alter é para adicionar um Campo DEFAULT na Tabela, caso ela seja adicionado após a criação e não especificado na coluna, como exemplo anterior.
 ALTER TABLE [dbo].[Produto] ADD  CONSTRAINT [DF_Produto_dt_cad_prod]  DEFAULT (getdate()) FOR [dt_cad_prod]
 GO
+
+-- Criando uma 2ª Tabela, Definindo o Id da Tabela Pai como Clustered e após o Id da tabela filha Index Nonclustered
+CREATE TABLE [dbo].[ListaProduto] (
+	[id_listprod] [int] NOT NULL,
+	[id_prod] [int] NOT NULL,
+	[qtd] [int] NOT NULL,
+	CONSTRAINT [IX_ListaProduto_id_prod] PRIMARY KEY CLUSTERED
+	( [id_prod] ASC )
+	WITH ( PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON,
+	       ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Criando Index Nonclustered para o campo Id da tabela Filho
+CREATE NONCLUSTERED INDEX [IX_ListaProduto_id_listprod] ON [dbo].[ListaProduto]
+(
+	[id_listprod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+
+-- Exclusão da Tabela
+DROP TABLE [dbo].[Produto]
+GO
+
