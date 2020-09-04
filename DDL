@@ -40,3 +40,28 @@ GO
 DROP TABLE [dbo].[Produto]
 GO
 
+-- Criado um FileGroup que é uma Orgazinação Logica do SQL Server
+ALTER DATABASE [TestDB] ADD FILEGROUP [INDEX]
+GO
+
+--Associar esse FileGroup a um arquivo Fisico do Banco de Dados
+ALTER DATABASE [TestDB] ADD FILE ( NAME = N'INDEX', FILENAME = N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\Index.ndf' , SIZE = 8192KB , FILEGROWTH = 65536KB ) TO FILEGROUP [INDEX]
+GO
+
+-- Procedure com parametro entrada para Interir Dados na Tabela
+ALTER PROCEDURE dbo.add_produto
+	@nm_prod VARCHAR(100),
+	@id_cat_prod INT
+AS
+	SET NOCOUNT ON;
+
+	INSERT INTO [dbo].[Produto] (nm_prod, id_cat_prod) VALUES (@nm_prod, @id_cat_prod);
+GO
+
+-- Procedure para pesquisar produtos na tabela
+CREATE PROCEDURE dbo.find_produto
+	@nm_prod VARCHAR(100)
+AS
+	SET NOCOUNT ON;
+	select * from dbo.Produto where nm_prod = @nm_prod;
+GO
