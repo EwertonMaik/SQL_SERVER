@@ -1,1 +1,18 @@
 -- DDL – Linguagem de Definição de Dados
+
+-- Criação Tabela + campo com DEFAULT + Index Primary Key
+CREATE TABLE [dbo].[Produto](
+	[id_prod] [int] NOT NULL,
+	[nm_prod] [varchar](100) NOT NULL,
+	[id_cat_prod] [int] NOT NULL,
+	[dt_cad_prod] [datetime] NOT NULL CONSTRAINT [DF_Produto_dt_cad_prod] DEFAULT GETDATE(),
+  CONSTRAINT [IX_Produto_id_prod] PRIMARY KEY CLUSTERED 
+  (
+	  [id_prod] ASC
+  ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Este Alter é para adicionar um Campo DEFAULT na Tabela, caso ela seja adicionado após a criação e não especificado na coluna, como exemplo anterior.
+ALTER TABLE [dbo].[Produto] ADD  CONSTRAINT [DF_Produto_dt_cad_prod]  DEFAULT (getdate()) FOR [dt_cad_prod]
+GO
