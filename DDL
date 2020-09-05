@@ -96,3 +96,7 @@ SELECT id_prod, nm_prod FROM dbo.Produto
 GO
 
 REFRESH MATERIALIZED VIEW EmployeeConfid2;
+
+-- Habilitando nivel de sua sessão transações implicitas
+SET IMPLICIT_TRANSACTIONS ON
+GO
