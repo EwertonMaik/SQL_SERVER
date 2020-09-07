@@ -131,3 +131,14 @@ BEGIN
 
 	RETURN(@msg);
 END;
+
+select dbo.fn_produto(1);
+
+-- Função para Retornar os resultados de uma tabela
+CREATE FUNCTION dbo.fn_table_produto ()
+RETURNS TABLE
+AS
+RETURN (SELECT * FROM dbo.Produto);
+GO
+
+select * from dbo.fn_table_produto ();
