@@ -83,6 +83,20 @@ AS
 	UPDATE dbo.Produto set nm_prod = @nm_prod where id_prod = @id_prod;
 GO
 
+--Procedure para pesquisar, com um par de entrada e um par de saída.
+CREATE PROCEDURE dbo.sp_find_produto_out
+	@id_prod INT,
+	@nm_prod VARCHAR(100) OUTPUT
+AS
+	BEGIN
+		SELECT @nm_prod = nm_prod from dbo.Produto WHERE id_prod = @id_prod;
+	END;
+
+-- Declarando uma variável para receber o valor OUTPUT
+DECLARE @nome VARCHAR(100);
+EXECUTE dbo.sp_find_produto_out @id_prod = 2, @nm_prod = @nome OUTPUT;
+SELECT @nome AS NOME;
+
 -- VIEW visualização da tabela de Produtos
 CREATE VIEW dbo.view_produtos
 AS
