@@ -114,3 +114,20 @@ REFRESH MATERIALIZED VIEW EmployeeConfid2;
 -- Habilitando nivel de sua sessão transações implicitas
 SET IMPLICIT_TRANSACTIONS ON
 GO
+
+-- Função para passar um parâmetro de verificar se ele Existe!
+ALTER FUNCTION dbo.fn_produto (@id INT)
+RETURNS VARCHAR(100)
+AS
+BEGIN
+	DECLARE @msg VARCHAR(100);
+
+	SELECT @msg = nm_prod FROM dbo.Produto WHERE id_prod = @id;
+
+	IF @msg IS NOT NULL
+		SET @msg = ('Produto: ' + @msg + ' Existe!');
+	ELSE
+		SET @msg = ('Não foi Encontrado!');
+
+	RETURN(@msg);
+END;
