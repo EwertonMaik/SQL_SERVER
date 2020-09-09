@@ -149,3 +149,32 @@ CREATE TABLE dbo.Produtos2 AS SELECT * FROM dbo.Produto;
 --Create Table a partir de outra tabela -- SQL Server
 SELECT * INTO dbo.Produtos2 FROM dbo.Produto;
 
+-- Adicionado Index Clustered nesta tabela dbo.Produtos2
+ALTER TABLE [dbo].[Produtos2] ADD  CONSTRAINT [IX_Produto_id_prod2] PRIMARY KEY CLUSTERED 
+(
+	[id_prod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+
+-- Adicionado Default no campo dt_cad_prod tabela dbo.Produtos2
+ALTER TABLE [dbo].[Produtos2] ADD  CONSTRAINT [DF_Produtos2_dt_cad_prod]  DEFAULT (getdate()) FOR [dt_cad_prod]
+GO
+
+-- Adicionado campo na tabela dbo.Produtos2
+ALTER TABLE dbo.Produtos2 ADD Operacao CHAR(3);
+
+-- Criado Trigger para qualquer operação depois de Inserir, Atualizar e Excluír, é inserido em outra tabela.
+CREATE TRIGGER dbo.tg_produto ON dbo.Produto
+AFTER INSERT, UPDATE, DELETE
+AS
+	BEGIN
+		SET NOCOUNT ON;
+		IF EXISTS (SELECT * FROM inserted)
+			INSERT INTO dbo.Produtos2 (nm_prod, id_cat_prod, Operacao)
+			SELECT a.nm_prod, a.id_cat_prod, 'INS' FROM INSERTED AS a
+
+		ELSE
+			INSERT INTO dbo.Produtos2 (nm_prod, id_cat_prod, Operacao)
+			SELECT d.nm_prod, d.id_cat_prod, 'DEL' FROM DELETED AS d
+	END
+GO
