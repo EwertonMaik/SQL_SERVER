@@ -142,3 +142,10 @@ RETURN (SELECT * FROM dbo.Produto);
 GO
 
 select * from dbo.fn_table_produto ();
+
+-- Create Table a partir de outra tabela - SQL Data Warehouse do Azure
+CREATE TABLE dbo.Produtos2 AS SELECT * FROM dbo.Produto;
+
+--Create Table a partir de outra tabela -- SQL Server
+SELECT * INTO dbo.Produtos2 FROM dbo.Produto;
+
