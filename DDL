@@ -178,3 +178,23 @@ AS
 			SELECT d.nm_prod, d.id_cat_prod, 'DEL' FROM DELETED AS d
 	END
 GO
+
+-- Exemplo abaixo utiliza a declaração de um curso para imprimir todos cadastros de produtos
+SET NOCOUNT ON;
+DECLARE
+	@id_prod int,
+	@nm_prod VARCHAR(200);
+
+DECLARE cursor_produtos CURSOR  
+    FOR SELECT id_prod, nm_prod FROM dbo.Produto
+OPEN cursor_produtos
+
+FETCH NEXT FROM cursor_produtos INTO @id_prod, @nm_prod;
+
+WHILE @@FETCH_STATUS = 0
+	BEGIN
+		PRINT 'ID - ' + CONVERT(varchar(5) ,@id_prod) + ', ' + 'NOME - ' + @nm_prod
+		FETCH NEXT FROM cursor_produtos INTO @id_prod, @nm_prod;
+	END;
+CLOSE cursor_produtos;
+DEALLOCATE cursor_produtos;
