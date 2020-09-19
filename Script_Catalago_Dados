@@ -1,1 +1,47 @@
 -- Comandos
+
+-- Via cmd Windows
+-- Executavel direto para abrir o SQL Server Configuration Manager
+SqlServerManager15.msc - SQL Server 2019
+SQLServerManager14.msc - SQL Server 2017
+SQLServerManager13.msc - SQL Server 2016
+
+-- Comando T-SQL do SQL Server
+-- Traz as informações de LOG de todas as Bases da Instãncia - Tamanho do Log e Espaço usado!
+dbcc sqlperf(logspace);
+
+-- Traz as informações do VLF's Virtual Log Files
+dbcc loginfo;
+
+--Store Procedure do SQL Server, tráz informações de tamanho de objetos do Banco de Dados
+-- Quando executado sozinho, tráz as informações de tamanho do banco atual selecionado
+sp_spaceused 'Produto';
+
+-- Store Procedure para verificar o spript de objetos do banco
+sp_helptext 'sp_spaceused'
+
+--Visualização de Usuários dos banco de Dados e Logins do Servidor
+select * from sys.sysusers;
+select * from sys.syslogins;
+
+--Visualização que lista todas VIEW
+select * from sys.all_views;
+
+--Visualização de todos banco de dados da Instância
+select * from sys.sysdatabases;
+
+--Lista os arquivos de Dados do Banco
+-- Posso verificar os Arquidos de Dados do Banco (MDF e NDF - Master/Second Data File) e arquivos de LOG (LDF - Log Data File)
+select * from sys.database_files;
+select file_id, type_desc, name, physical_name, state, size, max_size, growth
+from sys.database_files;
+
+--Visualização que lista todos os processos executados independente de seu status
+--Por ela consigo pegar o hostname, banco, spid, program_name, usuário e diversas outras informações do processo
+select sql_handle, * from sys.sysprocesses where status = 'runnable';
+
+-- Com a query anterior, peguei o código da coluna sql_handle do processo executado
+-- E passei no parâmetro da dm - sys.dm_exec_sql_text que é uma função
+-- essa dm me retorna a query executada
+select * from sys.dm_exec_sql_text(0x01000500F16794215041801C3302000000000000);
+
