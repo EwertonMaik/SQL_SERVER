@@ -198,3 +198,25 @@ WHILE @@FETCH_STATUS = 0
 	END;
 CLOSE cursor_produtos;
 DEALLOCATE cursor_produtos;
+
+-- Criado a tabela Produto2 com base na tabela Produto, incluindo todos seus registros, são identicas
+select * into dbo.Produto2 from dbo.Produto;
+
+--Inserido um registro na tabela Produto2, para ficar diferente da tabela Produto
+-- E ser aplicado um MERGE
+insert into dbo.Produto2 (nm_prod, id_cat_prod, dt_cad_prod) values ('FACA', 1, GETDATE());
+
+-- Script para aplicar merge na tabela Produto, Pegando o que tem de registro novo ou alterado da tabela produto2.
+BEGIN  
+    SET NOCOUNT ON;  
+    MERGE dbo.Produto AS a  
+    USING dbo.Produto2 AS b  
+    ON (a.id_prod = b.id_prod)  
+    WHEN MATCHED THEN
+        UPDATE SET a.nm_prod = b.nm_prod,
+				   a.id_cat_prod = b.id_cat_prod
+    WHEN NOT MATCHED THEN  
+        INSERT (nm_prod, id_cat_prod)  
+        VALUES (b.nm_prod, b.id_cat_prod);
+END;
+
