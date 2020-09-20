@@ -45,3 +45,8 @@ select sql_handle, * from sys.sysprocesses where status = 'runnable';
 -- essa dm me retorna a query executada
 select * from sys.dm_exec_sql_text(0x01000500F16794215041801C3302000000000000);
 
+-- Variaveis SQL Server
+select @@TRANCOUNT -- Informa se tem uma transação em aberto
+select @@SERVERNAME; -- Informa Hostname Servidor + Nome Instância
+select @@SERVICENAME; -- Informa Nome da Instância
+select @@VERSION; -- Informa Dados da Versão e Compilação do Instalação
