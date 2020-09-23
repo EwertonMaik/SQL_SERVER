@@ -1,5 +1,17 @@
 -- Comandos
 
+--Procedure para configuração de Parãmetros da Instância
+--Possui diversos parâmetos que podem ser validados em
+--https://docs.microsoft.com/pt-br/sql/database-engine/configure-windows/server-configuration-options-sql-server?view=sql-server-2017
+--Ao definir show advanced options como 1, você pode listar as opções avançadas usando sp_configure. O padrão é 0.
+USE master;  
+GO  
+EXEC sp_configure 'show advanced option', '1'; 
+RECONFIGURE; -- Aplica as modificações de configuração
+
+--Posso verificar os parâmetros na seguinte VIEW
+SELECT a.name,a.value, a.value_in_use FROM sys.configurations a
+
 -- Via cmd Windows
 -- Executavel direto para abrir o SQL Server Configuration Manager
 SqlServerManager15.msc - SQL Server 2019
