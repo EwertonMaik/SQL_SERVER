@@ -1,4 +1,16 @@
--- Comandos
+--Grupo de comandos DCL
+GRANT / REVOKE / DENY
+
+-- O nivél de segurança do Sql Server divide-se em:
+
+1 - Servidor / instãncia
+2 - Banco de Dados
+3 - Objetos
 
 --Comando para mudar o proprietário OWNER do Banco de Dados
 ALTER AUTHORIZATION ON DATABASE::NOME_BANCO TO NOME_LOGIN;
+--Aplicado para o logon SA ser o proprietário do banco TestDB
+USE [TestDB]
+GO
+ALTER AUTHORIZATION ON DATABASE::[TestDB] TO [sa];
+GO
