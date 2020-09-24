@@ -32,6 +32,9 @@ sp_spaceused 'Produto';
 -- Store Procedure para verificar o spript de objetos do banco
 sp_helptext 'sp_spaceused'
 
+-- Store Procedure para verificar informações do Banco
+sp_helpdb 'NOME_BANCO';
+
 --Visualização de Usuários dos banco de Dados e Logins do Servidor
 select * from sys.sysusers;
 select * from sys.syslogins;
