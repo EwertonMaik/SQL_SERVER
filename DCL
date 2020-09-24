@@ -2,15 +2,64 @@
 GRANT / REVOKE / DENY
 
 -- O nivél de segurança do Sql Server divide-se em:
-
 1 - Servidor / instãncia
+    (LOGINS - Podem ser Autenticação (WINDOWS) ou (SQL SERVER E WINDOWS))
 2 - Banco de Dados
+    (USERS)
 3 - Objetos
+    (SCHEMAS, ROLES - (SERVER ou DATABASE), PERMISSÕES (DCL))
+
 
 --Comando para mudar o proprietário OWNER do Banco de Dados
 ALTER AUTHORIZATION ON DATABASE::NOME_BANCO TO NOME_LOGIN;
+
 --Aplicado para o logon SA ser o proprietário do banco TestDB
 USE [TestDB]
 GO
 ALTER AUTHORIZATION ON DATABASE::[TestDB] TO [sa];
+GO
+
+--##################################################################
+--Criado um Logon user_01 de Servidor, onde seu banco padrão é o TestDB e não tem habilitado expiração de senha e verificação de politicas
+-- Esse logon não recebeu também nenhum acessso a Role de Servidor, apenas de banco logo mais abaixo.
+-- Esse LOGON é de apenas Autenticação apenas do SQL SERVER
+USE [master]
+GO
+CREATE LOGIN [user_01] WITH PASSWORD=N'123456789', DEFAULT_DATABASE=[TestDB], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+GO
+
+-- Criado o User user_01 para a base TestDB e relacionado ao Logon user_01
+USE [TestDB]
+GO
+CREATE USER [user_01] FOR LOGIN [user_01]
+GO
+
+-- O User - user_01 terá acesso apenas aos objetos do esquema  dbo
+USE [TestDB]
+GO
+ALTER USER [user_01] WITH DEFAULT_SCHEMA=[dbo]
+GO
+
+-- O user user_01 fora adicionado a role de Database db_datareader e db_datawriter
+-- Onde é permidito apenas ler, inserir, atualizar e excluír registros das tabelas que tem acesso
+USE [TestDB]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [user_01]
+GO
+USE [TestDB]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [user_01]
+GO
+
+--##################################################################
+-- Criando um LOGOn que autentique via SQL SERVER
+-- Logon user_02, autenticação via windows e banco de dados padrão TestDB
+USE [master]
+GO
+CREATE LOGIN [user_02] FROM WINDOWS WITH DEFAULT_DATABASE=[TestDB]
+GO
+
+-- Adicionado este Logon user_02 a role de Servidor dbcreator
+-- Onde pode criar Base de Dados, e será automaticamente proprietáro delas
+ALTER SERVER ROLE [dbcreator] ADD MEMBER [user_02]
 GO
