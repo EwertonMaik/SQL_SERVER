@@ -1,0 +1,4 @@
+-- Comandos
+
+--Comando para mudar o proprietário OWNER do Banco de Dados
+ALTER AUTHORIZATION ON DATABASE::NOME_BANCO TO NOME_LOGIN;
