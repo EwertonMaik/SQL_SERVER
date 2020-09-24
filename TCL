@@ -1,0 +1,2 @@
+-- TCL - Linguagem de Controle de Transação
+BEGIN TRANSACTION / COMMIT / SAVE TRANSACTION / ROLLBACK
