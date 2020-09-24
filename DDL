@@ -146,6 +146,21 @@ select * from dbo.fn_table_produto ();
 -- Create Table a partir de outra tabela - SQL Data Warehouse do Azure
 CREATE TABLE dbo.Produtos2 AS SELECT * FROM dbo.Produto;
 
+-- Criando uma tabela temporária com base na tabela de Produto, consultando e após aplicando um insert
+select * INTO #tab_temp_produto from dbo.produto;
+select * from #tab_temp_produto;
+insert into #tab_temp_produto select nm_prod, id_cat_prod, dt_cad_prod from dbo.Produto;
+
+-- Criando a tabela temporaria manualmente
+-- Quando a tabela criada tiver 2 (##), ela é Global
+CREATE TABLE #TEMP_Produto(
+	[id_prod] [int] IDENTITY(1,1) NOT NULL,
+	[nm_prod] [varchar](100) NOT NULL,
+	[id_cat_prod] [int] NOT NULL,
+	[dt_cad_prod] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
 --Create Table a partir de outra tabela -- SQL Server
 SELECT * INTO dbo.Produtos2 FROM dbo.Produto;
 
