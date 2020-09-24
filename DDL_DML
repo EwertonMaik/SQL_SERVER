@@ -1,4 +1,7 @@
 -- DDL – Linguagem de Definição de Dados
+CREATE / ALTER / DROP / TRUNCATE
+-- DML - Linguagem de Modelagem de Dados
+SELECT / INSERT / UPDATE / DELETE e MERGE que é uma operação que combinada o (INSERT, UPDATE e DELETE)
 
 -- Criação Tabela + campo com DEFAULT + Index Primary Key
 CREATE TABLE [dbo].[Produto](
