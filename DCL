@@ -63,3 +63,130 @@ GO
 -- Onde pode criar Base de Dados, e será automaticamente proprietáro delas
 ALTER SERVER ROLE [dbcreator] ADD MEMBER [user_02]
 GO
+
+-- Aplicando GRANT
+-- Liberado para o user user_01 permissão de Select, Update, Insert e Delete na tabela dbo.Produto;
+GRANT SELECT ON dbo.Produto TO user_01;
+GRANT UPDATE ON dbo.Produto TO user_01;
+GRANT INSERT ON dbo.Produto TO user_01;
+GRANT DELETE ON dbo.Produto TO user_01;
+GRANT SELECT, UPDATE, INSERT, DELETE ON dbo.Produto TO user_01; -- O comando pode ser aplicado em uma única instrução
+
+--Esse é um GRANT mais Generico, não liberado apenas para um objeto como o GRANT anterior
+--Com esta permissão,, o user_01 pode selecionar, atualizar, inserir ou deletar qualquer objeto da base
+GRANT SELECT TO user_01;
+GRANT UPDATE TO user_01;
+GRANT INSERT TO user_01;
+GRANT DELETE TO user_01;
+GRANT INSERT, UPDATE, SELECT, DELETE TO user_01; -- O comando pode ser aplicado em uma única instrução
+
+-- Removido todas as permissões das operações aplicadas no GRANT anterior
+REVOKE SELECT ON dbo.Produto TO user_01;
+REVOKE UPDATE ON dbo.Produto TO user_01;
+REVOKE INSERT ON dbo.Produto TO user_01;
+REVOKE DELETE ON dbo.Produto TO user_01;
+
+--Aplicado um GRANT de select na tabela dbo.Produto, onde o user_01 só pode selecionar os campos id_prod, nm_prod
+GRANT SELECT ON dbo.Produto(id_prod, nm_prod) TO user_01;
+
+-- Aplicado um GRANT de SELECT no ESQUEMA dbo para user_01
+--Agora o user_01 pode selecionar todas os objetos do ESQUEMA dbo
+--Aplicado GRANT para outras operações nos objetos do Esquema dbo
+GRANT SELECT ON SCHEMA :: dbo TO user_01;
+GRANT UPDATE ON SCHEMA :: dbo TO user_01;
+GRANT DELETE ON SCHEMA :: dbo TO user_01;
+GRANT INSERT ON SCHEMA :: dbo TO user_01;
+
+-- GRANT para o user_01 poder criar tabelas, views, procedure, function, 
+GRANT CREATE TABLE TO user_01;
+GRANT CREATE VIEW TO user_01;
+GRANT CREATE PROCEDURE TO user_01;
+GRANT CREATE FUNCTION TO user_01;
+
+-- Grant com varios permissões embutidas no comando
+GRANT
+       ALTER,
+       ALTER ANY ASSEMBLY,
+       AUTHENTICATE,
+       CONNECT,
+       CREATE AGGREGATE,
+       CREATE ASSEMBLY,
+       CREATE DEFAULT,
+       CREATE FUNCTION,
+       CREATE PROCEDURE,
+       CREATE SYNONYM,
+       CREATE TABLE,
+       CREATE VIEW,
+       DELETE,
+       EXECUTE,
+       INSERT,
+       REFERENCES,
+       SELECT,
+       SHOWPLAN,
+       UPDATE,
+       VIEW DATABASE STATE,
+       VIEW DEFINITION
+TO user_01;
+GO
+
+-- Revoke com varios permissões embutidas no comando
+REVOKE
+       ALTER,
+       ALTER ANY ASSEMBLY,
+       AUTHENTICATE,
+       CONNECT,
+       CREATE AGGREGATE,
+       CREATE ASSEMBLY,
+       CREATE DEFAULT,
+       CREATE FUNCTION,
+       CREATE PROCEDURE,
+       CREATE SYNONYM,
+       CREATE TABLE,
+       CREATE VIEW,
+       DELETE,
+       EXECUTE,
+       INSERT,
+       REFERENCES,
+       SELECT,
+       SHOWPLAN,
+       UPDATE,
+       VIEW DATABASE STATE,
+       VIEW DEFINITION
+FROM user_01;
+GO
+
+-- Removido a opção de GRANT OPTION para SELECT na tabela dbo.Produto do usuário user_01
+--Ele não poderá mais aplicar permissão de select para outros usuários para esta tabela
+--Com a opção cascade, foi removido o acesso de select dos usuários que o user_01 chegou de liberar
+REVOKE GRANT OPTION FOR SELECT ON dbo.Produto FROM user_01 CASCADE;
+
+--Na primeira instrução é negado o acesso de select para a tabela dbo.Produto para o user_01
+--Na segunda instrução é negado o select para user_01, não podendo selecionar nenhuma tabela
+DENY SELECT ON dbo.Produto TO user_01;
+DENY SELECT TO user_01;
+
+-- Deny com varios permissões embutidas no comando
+DENY
+       ALTER,
+       ALTER ANY ASSEMBLY,
+       AUTHENTICATE,
+       CONNECT,
+       CREATE AGGREGATE,
+       CREATE ASSEMBLY,
+       CREATE DEFAULT,
+       CREATE FUNCTION,
+       CREATE PROCEDURE,
+       CREATE SYNONYM,
+       CREATE TABLE,
+       CREATE VIEW,
+       DELETE,
+       EXECUTE,
+       INSERT,
+       REFERENCES,
+       SELECT,
+       SHOWPLAN,
+       UPDATE,
+       VIEW DATABASE STATE,
+       VIEW DEFINITION
+TO USR_MINI_CRM;
+GO
