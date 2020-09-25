@@ -8,3 +8,41 @@ FULL - Backup Completo
 INCREMENTAL - Vários arquivos de backup,com alterações apenas feitas após ultimo backup.
 DIFERENCIAL - Backup cumulativo, com todas as alterações feitas desde o último backup FULL realizado.
 LOG - Backup de LOG contendo todas os registros das transações.
+
+--Set o Banco de Dados em Modo de Recuperação FULL
+ALTER DATABASE TestDB SET RECOVERY FULL;
+
+--Set Banco de Dados em Modo de Recuperação SIMPLES
+ALTER DATABASE [TestDB] SET RECOVERY SIMPLE WITH NO_WAIT
+GO
+
+--Set Banco de Dados em Modo de Recuperação Bulk Logged
+ALTER DATABASE [TestDB] SET RECOVERY BULK_LOGGED WITH NO_WAIT
+GO
+
+--###################################################
+
+-- Realizado o Backup da base TestDB, FULL e Salvo no disco C:
+BACKUP DATABASE [TestDB]
+TO  DISK = N'C:\TestDB_Backup_FULL.bak'
+WITH DESCRIPTION = N'Backup_FULL', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+-- Criado uma tabela Produto
+CREATE TABLE [dbo].[Produto](
+	[id_prod] [int] IDENTITY(1,1) NOT NULL,
+	[nm_prod] [varchar](100) NOT NULL,
+	[id_cat_prod] [int] NOT NULL,
+	[dt_cad_prod] [datetime] NOT NULL,
+ CONSTRAINT [IX_Produto_id_prod] PRIMARY KEY CLUSTERED 
+(
+	[id_prod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-- Inserindo Registro na Tabela Produto
+INSERT into
+
