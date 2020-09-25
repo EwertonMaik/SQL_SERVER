@@ -238,5 +238,32 @@ BEGIN
         VALUES (b.nm_prod, b.id_cat_prod);
 END;
 
+-- Criado o Esquema user_01 e o user_01 é o proprietário dele
+-- Agora pode ser criado vários objetos dentro deste esquema, como tabelas, procedures, functios, triggers de demais objetos do banco de dados
+USE [TestDB]
+GO
+CREATE SCHEMA [user_01] AUTHORIZATION [user_01]
+GO
+
+-- Criado a mesma tabela Produto do esquema dbo, porém agora dentro do esquema user_01
+--É permitido tabelas com nomes iguais, porém em esquemas distintos
+CREATE TABLE [user_01].[Produto](
+	[id_prod] [int] IDENTITY(1,1) NOT NULL,
+	[nm_prod] [varchar](100) NOT NULL,
+	[id_cat_prod] [int] NOT NULL,
+	[dt_cad_prod] [datetime] NOT NULL,
+ CONSTRAINT [IX_Produto_id_prod] PRIMARY KEY CLUSTERED 
+(
+	[id_prod] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+commit
+ALTER TABLE [user_01].[Produto] ADD  CONSTRAINT [DF_Produto_dt_cad_prod]  DEFAULT (getdate()) FOR [dt_cad_prod]
+GO
+
+--
+
+
 
 
