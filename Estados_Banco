@@ -1,0 +1,31 @@
+--Modos ou Estados de Manutenção de Banco de Dados
+
+OFFILINE / ONLINE / SINGLE_USER / MULT_USER / READ_WRITE / RESTORING / READ_ONLY / RECOVERING / RECOVERING_PENDING / SUSPECT / EMERGENCY
+
+--Script para tornar o Banco Offline, todas as transações que estão em andamento são defeitas
+USE MASTER
+GO
+ALTER DATABASE TestDB SET OFFLINE WITH ROLLBACK IMMEDIATE;
+ 
+----Script para retornar o Banco Online
+USE MASTER
+GO
+ALTER DATABASE TestDB SET ONLINE;
+
+--Altera o Banco de Dados para único Usuário, e rollback das transações que estão em andamento
+USE MASTER;
+GO
+ALTER DATABASE TestDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+--Torna o Banco de Dados apenas Leitura
+ALTER DATABASE TestDB SET READ_ONLY;
+GO
+
+--Torna o Banco de Dados Multi Usuários, aceita mais de uma conexão
+ALTER DATABASE TestDB SET MULTI_USER;
+GO
+
+--Torna o Banco de Dados aberto para leitura e escrita
+ALTER DATABASE TestDB SET READ_WRITE;
+GO
