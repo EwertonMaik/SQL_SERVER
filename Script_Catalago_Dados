@@ -65,3 +65,6 @@ select @@TRANCOUNT -- Informa se tem uma transação em aberto
 select @@SERVERNAME; -- Informa Hostname Servidor + Nome Instância
 select @@SERVICENAME; -- Informa Nome da Instância
 select @@VERSION; -- Informa Dados da Versão e Compilação do Instalação
+
+-- Procedure que traz informação de permissão do usuário
+EXEC dbo.sp_helprotect @username = 'dbo';
