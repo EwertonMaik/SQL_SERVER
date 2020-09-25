@@ -68,3 +68,11 @@ select @@VERSION; -- Informa Dados da Versão e Compilação do Instalação
 
 -- Procedure que traz informação de permissão do usuário
 EXEC dbo.sp_helprotect @username = 'dbo';
+
+--Alternar entre usuários para executar operações
+select SYSTEM_USER; -- vejo em qual usuário estou conectado
+EXECUTE AS user='user_01'; -- Comando Execute para mudar para o user_01
+select SYSTEM_USER; -- Conferindo o atual usuário que esta conectado
+REVERT; -- Reverte para o usuário anterior conectado
+
+
