@@ -29,3 +29,29 @@ GO
 --Torna o Banco de Dados aberto para leitura e escrita
 ALTER DATABASE TestDB SET READ_WRITE;
 GO
+
+--#################################################
+-- Script para colocar o Banco de Dados em Mode Emergência
+ALTER DATABASE TestDB SET EMERGENCY;
+GO
+
+-- Comando DBCC para fazer verificação do Banco de Dados
+DBCC CHECKDB('TestDB');
+GO
+
+-- Mudando o modo para um Único usuário conectado para realizar outras operações
+ALTER DATABASE TestDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+
+-- Comando DBCC para executar reparos de manutenção no Banco de Dados
+DBCC CHECKDB('TestDB', REPAIR_ALLOW_DATA_LOSS) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+GO
+DBCC CHECKDB('TestDB', REPAIR_REBUILD) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+GO
+
+-- Retornando o Banco para Multi Usuário
+ALTER DATABASE TestDB SET MULTI_USER
+GO
+
+-- Restarta o status do Banco de Dados
+EXEC sp_resetstatus 'TestDB';
