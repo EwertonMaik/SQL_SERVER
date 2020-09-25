@@ -1,0 +1,10 @@
+-- SQl Server Possui os Modos de Recuperação
+COMPLETO - Registra todos as Transações no arquivo de LOG, sendo necessário realizar backup de LOG.
+SIMPLES - Registrar as transações no arquivo de LOG, porém são truncadas automaticamente quando o arquivo enche ou sofre checkpoint
+BULK-LOGGED - Registra as transações no arquivo de LO e é necessário fazer backup de log também.
+
+-- Tipos de Backup
+FULL - Backup Completo
+INCREMENTAL - Vários arquivos de backup,com alterações apenas feitas após ultimo backup.
+DIFERENCIAL - Backup cumulativo, com todas as alterações feitas desde o último backup FULL realizado.
+LOG - Backup de LOG contendo todas os registros das transações.
