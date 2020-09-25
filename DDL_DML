@@ -262,8 +262,12 @@ commit
 ALTER TABLE [user_01].[Produto] ADD  CONSTRAINT [DF_Produto_dt_cad_prod]  DEFAULT (getdate()) FOR [dt_cad_prod]
 GO
 
---
-
+-- Script para Alterar o esquema de uma tabela
+-- Verificado que sua atual tabela esta no esquema dbo e é alterado para o esquema user_01
+select * from dbo.salario;
+ALTER SCHEMA user_01 TRANSFER dbo.salario
+GO
+select * from user_01.salario;
 
 
 
