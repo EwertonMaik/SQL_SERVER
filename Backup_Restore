@@ -21,16 +21,7 @@ ALTER DATABASE [TestDB] SET RECOVERY BULK_LOGGED WITH NO_WAIT
 GO
 
 --###################################################
-
--- Realizado o Backup da base TestDB, FULL e Salvo no disco C:
-BACKUP DATABASE [TestDB]
-TO  DISK = N'C:\TestDB_Backup_FULL.bak'
-WITH DESCRIPTION = N'Backup_FULL', NOFORMAT, NOINIT,
-NAME = N'TestDB-Completo Banco de Dados Backup',
-SKIP, NOREWIND, NOUNLOAD,  STATS = 5
-GO
-
--- Criado uma tabela Produto
+-- Criado uma tabela Produto no Banco de Dados (TestDB)
 CREATE TABLE [dbo].[Produto](
 	[id_prod] [int] IDENTITY(1,1) NOT NULL,
 	[nm_prod] [varchar](100) NOT NULL,
@@ -43,6 +34,24 @@ CREATE TABLE [dbo].[Produto](
 ) ON [PRIMARY]
 GO
 
--- Inserindo Registro na Tabela Produto
-INSERT into
+-- Inserindo Registros na Tabela Produto
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 01', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 02', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 03', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 04', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 05', 1);
 
+-- Realizado o Backup da base TestDB, FULL e Salvo no disco C:
+BACKUP DATABASE [TestDB]
+TO  DISK = N'C:\TestDB_Backup_FULL.bak'
+WITH DESCRIPTION = N'Backup_FULL', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Inserindo mais registros na tabela Produto
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 06', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 07', 1);
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 08', 1);
+
+--
