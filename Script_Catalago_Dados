@@ -65,6 +65,21 @@ select @@TRANCOUNT -- Informa se tem uma transação em aberto
 select @@SERVERNAME; -- Informa Hostname Servidor + Nome Instância
 select @@SERVICENAME; -- Informa Nome da Instância
 select @@VERSION; -- Informa Dados da Versão e Compilação do Instalação
+SELECT @@LANGUAGE; -- Informação da Linguagem da Intalação do Banco
+SELECT @@TRANCOUNT; -- Informa a quantidade de Transações em aberto
+SELECT @@SERVERNAME; --Retorna o nome do servidor local que está executando o SQL Server.
+SELECT @@SPID; --Retorna a ID de sessão do processo de usuário atual.
+
+-- É uma expressão que contém as informações de propriedade que serão retornadas para o servidor.
+SELECT SERVERPROPERTY('productversion')Versao_Produto, 
+       SERVERPROPERTY ('productlevel')Nivel_versao,
+       SERVERPROPERTY ('edition') Edicao,
+	     SERVERPROPERTY('InstanceDefaultDataPath')LOCALDADOS,
+	     SERVERPROPERTY('InstanceDefaultLogPath')LOCALOGS,
+	     SERVERPROPERTY('InstanceName')INSTANCIA,
+	     SERVERPROPERTY('IsHadrEnabled')HADR,
+	     SERVERPROPERTY('LCID')LOCALIZACAO,
+	     SERVERPROPERTY('ServerName')SERVERNAME
 
 -- Procedure que traz informação de permissão do usuário
 EXEC dbo.sp_helprotect @username = 'dbo';
@@ -75,4 +90,20 @@ EXECUTE AS user='user_01'; -- Comando Execute para mudar para o user_01
 select SYSTEM_USER; -- Conferindo o atual usuário que esta conectado
 REVERT; -- Reverte para o usuário anterior conectado
 
+--DETTACH (DESANEXAR) e ATACH (ANEXAR) BANCO DE DADOS
+-- Função pode ser usada para tirar um banco de um ambiente e levar para outro ambiente
+--Desanexando Banco
+USE [master]
+GO
+EXEC master.dbo.sp_detach_db @dbname = N'TestDB'
+GO
 
+-- ATACH (ANEXAR) -- Anexando Banco
+USE [master]
+GO
+CREATE DATABASE [TestDB] ON 
+( FILENAME = N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\TestDB.mdf' ),
+( FILENAME = N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\TestDB_log.ldf' ),
+( FILENAME = N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\Index.ndf' )
+ FOR ATTACH
+GO
