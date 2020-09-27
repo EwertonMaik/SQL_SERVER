@@ -1,2 +1,10 @@
 -- TCL - Linguagem de Controle de Transação
 BEGIN TRANSACTION / COMMIT / SAVE TRANSACTION / ROLLBACK
+
+--Exemplo de abertuda explicita de um transação com WITH MARK
+-- A transação é marcada e pode ser usada como ponto de restauração do LOG.
+use TestDB
+go
+begin transaction TRAN_01_WITH_MARK WITH MARK
+INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro Com Transação Marcada', 1);
+COMMIT;
