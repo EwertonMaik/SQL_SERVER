@@ -203,3 +203,30 @@ USE TestDB
 SELECT COUNT(*), CARGA FROM TESTE
 GROUP BY CARGA;
 
+--###############################################################
+--Realizando o Bakup FULL da base TestDB e distribuindo em 2 arquivos
+USE MASTER
+GO
+BACKUP DATABASE [TestDB]
+TO  DISK = N'C:\SQL2019\TestDB_Backup_FULL_Distribuido_01.bak',
+    DISK = N'C:\SQL2019\TestDB_Backup_FULL_Distribuido_02.bak'
+WITH DESCRIPTION = N'Backup_FULL_EM_ARQUIVOS_DISTRIBUIDOS', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Restaurando o Banco (TestDB) 2 arquivos distribuidos
+-- O nome do Banco como TestDB_
+-- Posso restaurar a base e colocar os arquivos no mesmo endereço ou em até discos distintos
+RESTORE DATABASE [TestDB_]
+FROM  DISK = N'C:\SQL2019\TestDB_Backup_FULL_Distribuido_01.bak',
+	  DISK = N'C:\SQL2019\TestDB_Backup_FULL_Distribuido_02.bak'
+WITH  FILE = 1,
+MOVE N'TestDB'	   TO N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\TestDB_.mdf',
+MOVE N'INDEX'	   TO N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\Index_.ndf',
+MOVE N'TestDB_log' TO N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\TestDB_log_.ldf',
+NOUNLOAD,  STATS = 2
+GO
+
+
+
