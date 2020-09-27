@@ -228,5 +228,12 @@ MOVE N'TestDB_log' TO N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVE
 NOUNLOAD,  STATS = 2
 GO
 
-
+--##################################################################
+-- Outra alternativa de Backup e Restore é o BACPAC
+-- Backup BACPAC
+Realizado pelo SSMS - SQL Server Manager Studio, é só clicar com botão direito em cima da base / TAREFAS / EXPORTAR APLICATIVO DE CAMADA DE DADOS
+Será exportado a estrutura lógica da base e seus registros, é possível selecionar quais objetos também.
+-- Restore BACPAC
+Realizado pelo SSMS - SQL Server Manager Studio, clicar com botão direito em cima da aba (Banco de Dados), IMPORTAR APLICATIVO DE CAMADA DE DADOS
+Será importado a estrutura lógica da base e seus registros, é possivel selecionar quais objetos também.
 
