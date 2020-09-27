@@ -54,4 +54,30 @@ INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 06', 1);
 INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 07', 1);
 INSERT INTO dbo.Produto (nm_prod, id_cat_prod) VALUES ('Cadastro 08', 1);
 
---
+-- Realizado Backup de Log após as inserções de Novos registros anteriormente
+BACKUP LOG [TestDB]
+TO  DISK = N'C:\SQL2019\TestDB_Backup_LOG.bak'
+WITH  DESCRIPTION = N'Backup_LOG', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Agora o Banco TestDB será Excluído, Restaurado o Full como NORECOVERY e Após Restaurado o Backup de LOG
+DROP DATABASE [TestDB]
+GO
+
+--Banco de Dados Restaurado como NORECOVERY
+USE [master]
+RESTORE DATABASE
+[TestDB] FROM  DISK = N'C:\SQL2019\TestDB_Backup_FULL.bak'
+WITH  FILE = 1,  NORECOVERY,  NOUNLOAD,  STATS = 5
+GO
+
+-- Restaurado o arquivo de Backup de LOG e liberado a base para Leitura
+RESTORE LOG [TestDB]
+FROM  DISK = N'C:\SQL2019\TestDB_Backup_LOG.bak'
+WITH  FILE = 1,  NOUNLOAD,  STATS = 10
+GO
+
+-- MUDA O BANCO PARA O MODO NORECOVERY para - RECOVERY
+RESTORE DATABASE TESTDB WITH RECOVERY
