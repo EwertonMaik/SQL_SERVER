@@ -204,7 +204,7 @@ SELECT COUNT(*), CARGA FROM TESTE
 GROUP BY CARGA;
 
 --###############################################################
---Realizando o Bakup FULL da base TestDB e distribuindo em 2 arquivos
+--Realizando o Backup FULL da base TestDB e distribuindo em 2 arquivos
 USE MASTER
 GO
 BACKUP DATABASE [TestDB]
