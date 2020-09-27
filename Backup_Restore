@@ -85,3 +85,121 @@ GO
 
 -- MUDA O BANCO PARA O MODO NORECOVERY para - RECOVERY
 RESTORE DATABASE TESTDB WITH RECOVERY
+
+--###################################################################################################
+--Esta parte SIMULA a Realização de um Backup FULL, em seguida um de LOG e por Último um Backup DIFERENCIAL
+--Eles podem ser restaurados em sua devida ordem, FULL, LOG e DIFF
+-- Ou apenas o FULL e por último do DIFF, que contém todas as informações desde o último Backup Full Realizado
+
+--Passo 1
+--Realizando 1 Backup FULL da base TestDB
+USE MASTER
+GO
+BACKUP DATABASE [TestDB]
+TO  DISK = N'C:\SQL2019\TestDB_Backup_FULL.bak'
+WITH DESCRIPTION = N'Backup_FULL', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Passo 2
+--Criando tabela TESTE
+USE TestDB
+CREATE TABLE TESTE (
+	ID INT IDENTITY(1,1)PRIMARY KEY,
+	CARGA VARCHAR (50),	
+)ON [PRIMARY]
+GO
+
+--Passo 3
+--Inserindo carga de Registros
+INSERT INTO TESTE VALUES ('CARGA_DADOS_01')
+GO 1000
+
+--Passo 4
+--Verificando registros
+SELECT COUNT(*) FROM TESTE;
+
+--Passo 5
+--Criando Backup de LOG 01
+BACKUP LOG [TestDB]
+TO  DISK = N'C:\SQL2019\TestDB_Backup_LOG_01.bak'
+WITH  DESCRIPTION = N'Backup_LOG', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Passo 6
+--Inserindo carga de Registros
+INSERT INTO TESTE VALUES ('CARGA_DADOS_02')
+GO 1000
+ 
+--Passo 7
+----Criando Backup de LOG 02
+BACKUP LOG [TestDB]
+TO  DISK = N'C:\SQL2019\TestDB_Backup_LOG_02.bak'
+WITH  DESCRIPTION = N'Backup_LOG', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+ 
+--Passo 8
+--Inserindo carga de Registros
+INSERT INTO TESTE VALUES ('CARGA_DADOS_03')
+GO 1000
+ 
+--Passo 9
+----Criando Backup DIFFERENTIAL
+BACKUP DATABASE [TestDB]
+TO  DISK = N'C:\SQL2019\Backup_DIFF.bak'
+WITH  DIFFERENTIAL ,  DESCRIPTION = N'Backup_DIFF', NOFORMAT, NOINIT,
+NAME = N'TestDB-Completo Banco de Dados Backup',
+SKIP, NOREWIND, NOUNLOAD,  STATS = 5
+GO
+
+--Passo 10
+--Verificando
+SELECT COUNT(*), CARGA FROM TESTE
+GROUP BY CARGA;
+ 
+ 
+--Passo 11
+--Excluído Banco de Dados TestDB
+DROP DATABASE [TestDB];
+GO
+
+--Passo 12
+-- Verifica diversas informações do arquivo de Backup FULL, LOG, DIFF
+--Verifica as marcas de LSN do segundo Backup FULL / números de sequência de log = LSN
+RESTORE HEADERONLY FROM DISK = 'C:\SQL2019\TestDB_Backup_FULL.bak'
+RESTORE HEADERONLY FROM DISK = 'C:\SQL2019\TestDB_Backup_LOG_01.bak'
+RESTORE HEADERONLY FROM DISK = 'C:\SQL2019\TestDB_Backup_LOG_02.bak'
+RESTORE HEADERONLY FROM DISK = 'C:\SQL2019\Backup_DIFF.bak'
+
+--Passo 13
+--Restaurando o arquivo Backup FULL, e deixando a base NORECOVERY
+USE [master]
+RESTORE DATABASE [TestDB]
+FROM  DISK = N'C:\SQL2019\TestDB_Backup_FULL.bak'
+WITH  FILE = 1,  NORECOVERY,  NOUNLOAD,  STATS = 5
+GO
+
+--PASSO 14
+--Restaurando o Arquivo de Backup DIFF, não tendo necessidade de restaurar os dois anteriores de LOG
+-- Visto que o DIFF contêm todas as informações desde o Backup FULL
+RESTORE DATABASE TestDB
+FROM DISK='C:\SQL2019\Backup_DIFF.bak' 
+WITH  NORECOVERY,REPLACE, STATS;
+
+--Passo 15
+--Libera a base com Recovery, pronta para uso
+USE MASTER
+GO
+RESTORE DATABASE TestDB WITH RECOVERY;
+
+--Passo 16
+--Verificando dados
+USE TestDB
+SELECT COUNT(*), CARGA FROM TESTE
+GROUP BY CARGA;
+
