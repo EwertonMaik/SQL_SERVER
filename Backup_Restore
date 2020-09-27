@@ -20,7 +20,11 @@ GO
 ALTER DATABASE [TestDB] SET RECOVERY BULK_LOGGED WITH NO_WAIT
 GO
 
+-- Norecovery - Restaura o arquivo de dados ou log do Banco, e o deixa não recuperado e não online para demais arquivos serem restaurados ainda.
+-- Standby - Restaura o arquivo de dados ou log do Banco e deixa ele em Espera e Somente leitura para restaurar mais arquivos.
+
 --###################################################
+-- SIMULANDO BACKUP FULL / INSERINDO REGISTROS AO BANCO / BACKUP DE LOG / DROP DATABASE / RESTAURADO BACKUP DATABASE FULL / RESTAURADO BACKUP LOG 
 -- Criado uma tabela Produto no Banco de Dados (TestDB)
 CREATE TABLE [dbo].[Produto](
 	[id_prod] [int] IDENTITY(1,1) NOT NULL,
