@@ -1,3 +1,6 @@
+--Para validar em uma Base de Dados, segue o link da Base AdventureWorks2017
+https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2017.bak
+
 -- https://docs.microsoft.com/pt-br/sql/relational-databases/indexes/reorganize-and-rebuild-indexes?view=sql-server-ver15
 -- Recomendação da Microsoft é:
 
