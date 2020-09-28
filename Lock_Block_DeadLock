@@ -5,3 +5,57 @@ Ocorre um Lock quando uma sessão realiza alguma alteração (dados ou estrutura
 
 -- DEADLOCK - Ocorre quando há um Lock e a sessão bloqueado está sendo bloqueada, e ambas não conseguem terminar. Sendo necessário encerrar, matar uma das operações.
 
+
+-- Objetos do catalago de dados que podem ser usados para analisar as situações de LOCK / BLOCK e DEADLOCK
+sp_who2; --Fornece informações sobre usuários, sessões e processos atuais em uma instância
+EXEC sp_who 'active';
+--contém uma linha para cada bloqueio mantido pelas sessões especificadas nos parâmetros ** @ spid1** e ** @ spid2** . Se nem ** @ spid1** nem ** @ spid2**
+--forem especificados, o conjunto de resultados relatará os bloqueios para todas as sessões atualmente ativas na instância
+sp_Lock;
+
+--Contém informações sobre os processos que estão em execução em uma instância do SQL Server.
+select * from sys.dm_tran_locks;
+
+--Retorna os processos do cliente ou processos do sistema
+select * from sys.SYSPROCESSES;
+
+select spid, blocked, hostname=left(hostname,20), program_name=left(program_name,20),
+       WaitTime_Seg = convert(int,(waittime/1000))  ,open_tran, status
+From master.dbo.sysprocesses 
+where blocked > 0 order by spid;
+
+--Após identificar a conexão que está te bloqueado use o comando DBCC para ver a query que está em execução.
+DBCC INPUTBUFFER(80);
+
+-- Matar Processos
+KILL 80;
+
+-- Query mais Robusta usando varias DM's do catalago de dados, trás muitas informações relacionadas aos processos, sessões, status e o que esta executando 
+SELECT
+        L.request_session_id AS SPID,
+        DB_NAME(L.resource_database_id) AS DatabaseName,
+        O.Name AS LockedObjectName,
+        P.object_id AS LockedObjectId,
+        L.resource_type AS LockedResource,
+        L.request_mode AS LockType,
+        ST.text AS SqlStatementText,       
+        ES.login_name AS LoginName,
+        ES.host_name AS HostName,
+        TST.is_user_transaction as IsUserTransaction,
+        AT.name as TransactionName,
+        CN.auth_scheme as AuthenticationMethod
+FROM   
+  sys.dm_tran_locks L
+        JOIN sys.partitions P ON P.hobt_id = L.resource_associated_entity_id
+        JOIN sys.objects O ON O.object_id = P.object_id
+        JOIN sys.dm_exec_sessions ES ON ES.session_id = L.request_session_id
+        JOIN sys.dm_tran_session_transactions TST ON ES.session_id = TST.session_id
+        JOIN sys.dm_tran_active_transactions AT ON TST.transaction_id = AT.transaction_id
+        JOIN sys.dm_exec_connections CN ON CN.session_id = ES.session_id
+        CROSS APPLY sys.dm_exec_sql_text(CN.most_recent_sql_handle) AS ST
+WHERE  
+  resource_database_id = db_id()
+ORDER BY
+  L.request_session_id;
+  
+  
