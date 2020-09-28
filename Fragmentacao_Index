@@ -1,0 +1,30 @@
+-- https://docs.microsoft.com/pt-br/sql/relational-databases/indexes/reorganize-and-rebuild-indexes?view=sql-server-ver15
+-- Recomendação da Microsoft é:
+
+Valoravg_fragmentation_in_percent	Instrução corretiva
+> 5% e < = 30% 1	ALTER INDEX REORGANIZE
+> 30% 1	ALTER INDEX REBUILD WITH (ONLINE = ON)
+
+-- Query abaixo para verificar a Fragmentação de INDEX, tem uma opção comentada para inserir o resultado em uma tabela temporária
+-- E esses valos na tabela temporária poderá ser comparado com os valores depois de realizar o processo de REORGANIZE / REBUILD
+SELECT '1' TEMPO,
+  c.[name] as 'Schema',
+  b.[name] as 'Tabela',
+  d.[name] as 'Indice',
+  a.avg_fragmentation_in_percent as PCT_Frag,
+  a.page_count as 'Paginas'
+  --INSERINDO EM TABELA TEMPORARIO
+  --INTO #ANALISE_IX
+FROM sys.dm_db_index_physical_stats (DB_ID(), NULL, NULL, NULL, NULL) AS a
+  INNER JOIN sys.tables b 
+       on b.[object_id] = a.[object_id]
+  INNER JOIN sys.schemas c 
+       on b.[schema_id] = c.[schema_id]
+  INNER JOIN sys.indexes AS d 
+       ON d.[object_id] = a.[object_id]
+    AND a.index_id = d.index_id
+  WHERE a.database_id = DB_ID()
+  AND a.avg_fragmentation_in_percent >5
+  AND d.[name]  IS NOT NULL
+  ORDER BY a.avg_fragmentation_in_percent desc;
+  
