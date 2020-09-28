@@ -1,0 +1,7 @@
+-- LOCK - Ocorre devido as propriedades ACID dos Bancos Relacionais
+Ocorre um Lock quando uma sessão realiza alguma alteração (dados ou estrutura) em um objeto, e ele não pode ser usado, até a operação finalizar.
+
+-- BLOCK - Ocorre quando existe um LOCK em um objeto, e uma ou demais sessões precisam usar esse objeto, tendo que ficar em WAIT (ESPERA) até a operação terminar.
+
+-- DEADLOCK - Ocorre quando há um Lock e a sessão bloqueado está sendo bloqueada, e ambas não conseguem terminar. Sendo necessário encerrar, matar uma das operações.
+
