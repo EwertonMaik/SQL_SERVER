@@ -4,6 +4,7 @@ Ocorre um Lock quando uma sessão realiza alguma alteração (dados ou estrutura
 -- BLOCK - Ocorre quando existe um LOCK em um objeto, e uma ou demais sessões precisam usar esse objeto, tendo que ficar em WAIT (ESPERA) até a operação terminar.
 
 -- DEADLOCK - Ocorre quando há um Lock e a sessão bloqueado está sendo bloqueada, e ambas não conseguem terminar. Sendo necessário encerrar, matar uma das operações.
+NO caso dos DEADLOCKS, o SQL Server identifica-os e escolhe um dos dois e mata o processo automaticamente. No final do documento, segue um exemplo que pode ser simulado.
 
 
 -- Objetos do catalago de dados que podem ser usados para analisar as situações de LOCK / BLOCK e DEADLOCK
@@ -58,4 +59,32 @@ WHERE
 ORDER BY
   L.request_session_id;
   
-  
+  --################################################################
+  --SIMULANDO UM EXEMPLO DE DEADLOCK, APÓS IDENTIFICADO PELO SQL SERVER UM CASO DE DEADLOCLK, UM DOS PROCESSOS É ENCERRADO AUTOMATICAMENTE, PARA LIBERAR 
+--Em seu banco de Dados, Vamos Criar duas Tabelas e inserir 1 registro em cada uma
+USE TestDB;
+GO
+
+CREATE TABLE TAB_1 (CAMPO1 int);
+CREATE TABLE TAB_2 (CAMPO1 int);
+
+INSERT TAB_1 VALUES (1);
+INSERT TAB_2 VALUES (5);
+
+--OBSERVAÇÃO EXECUTAR PASSO 2 E 3 QUASE QUE AO MESMO TEMPO. (CADA UM EM UMA SESSÃO ABERTA NO SSMS)
+-- UM PROCESSO BLOQUEARÁ O OUTRO E NÃO SE ENCERRARÃO, ATÉ O SQL SERVER IDENTIFICA-LO E ESCOLHER AUTOMATICAMENTE
+--UM PROCESSO PARA SER FINALIZADO E EXIBIR NO DISPLAY DE RESULTADOS
+
+--2. Abrir outra sessão e execute os seguintes comandos:
+BEGIN TRAN
+	UPDATE TAB_1 SET CAMPO1 = 11 WHERE CAMPO1 = 1
+	WAITFOR DELAY '00:00:30'
+	UPDATE TAB_2 SET CAMPO1 = 55 WHERE CAMPO1 = 5
+COMMIT
+
+--3. Abrir outra sessão e execute os seguintes comandos:
+BEGIN TRAN
+UPDATE TAB_2 SET CAMPO1 = 111 WHERE CAMPO1 = 5
+WAITFOR DELAY '00:00:20'
+UPDATE TAB_1 SET CAMPO1 = 555 WHERE CAMPO1 = 1
+COMMIT
