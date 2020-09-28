@@ -53,3 +53,42 @@ FROM sys.dm_db_index_physical_stats (DB_ID(), NULL, NULL, NULL, NULL) AS a
     AND a.avg_fragmentation_in_percent >5
     AND d.[name]  IS NOT NULL
     ORDER BY a.avg_fragmentation_in_percent desc;
+
+
+-- Esta query irá inserir na tabela temporária #ANALISE_IX, os valores da primeira query executada, que buscas os INDEX fragmentados
+-- Ela esta com a marcação '2' AS TEMPO - que será usado na proxima query para comparar os valores de antes e depois
+INSERT INTO #ANALISE_IX
+SELECT '2' AS TEMPO,
+c.[name] as 'Schema',
+b.[name] as 'Tabela',
+d.[name] as 'indice',
+a.avg_fragmentation_in_percent as PCT_Frag,
+a.page_count as 'Paginas'
+FROM sys.dm_db_index_physical_stats (DB_ID(), NULL, NULL, NULL, NULL) AS a
+INNER JOIN sys.tables b 
+     on b.[object_id] = a.[object_id]
+INNER JOIN sys.schemas c 
+     on b.[schema_id] = c.[schema_id]
+INNER JOIN sys.indexes AS d 
+     ON d.[object_id] = a.[object_id]
+	AND a.index_id = d.index_id
+WHERE a.database_id = DB_ID()
+AND a.avg_fragmentation_in_percent >5
+AND d.[name]  IS NOT NULL
+ORDER BY a.avg_fragmentation_in_percent desc;
+
+--Query usada para comparação dos valores inseridos na tabela temporária
+--Usa o expressão WITH especificar um conjunto de resultados nomeados temporariamente como ANTES e DEPOOIS baseados na condição do tempo = 1 e 2
+WITH
+  ANTES (tempo, tabela, indice, pct)
+as (select a.tempo, a.tabela, a.indice, a.Pct_frag from #ANALISE_IX a
+		where a.tempo = '1'),
+  DEPOIS (tempo, tabela, indice, pct)
+as (select a.tempo,a.tabela,a.indice, a.Pct_frag from #ANALISE_IX a
+		where a.tempo = '2')
+
+SELECT A.TABELA, A.indice,A.PCT as PCT_ANTES,B.PCT as PCT_DEPOIS,ISNULL((B.PCT/A.PCT),100) AS REDUCAO
+FROM ANTES A
+LEFT JOIN DEPOIS B
+ON A.TABELA=B.TABELA
+AND A.indice=B.indice
