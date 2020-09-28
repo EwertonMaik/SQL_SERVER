@@ -1,0 +1,29 @@
+-- Para Habilitar e configurar o Database E-mail
+
+USE master 
+GO 
+sp_configure 'show advanced options',1 
+GO 
+RECONFIGURE WITH OVERRIDE 
+GO 
+sp_configure 'Database Mail XPs', 1 -- 1 ligado 0 desligado 
+GO 
+RECONFIGURE  
+GO
+
+--Após Habilitar a configuração, via Interface Grafica do SSMS
+--GERENCIAMENTO \DATABASE EMAIL \ Botão direito - Configurar Database Email
+ 
+-- Tabela de Log que registra todas as ocorrencias de E-mails
+use msdb
+select sent_status ,* from sysmail_allitems;
+
+
+--Procedure que pode ser usada para apagar e-mails pelo status
+EXECUTE msdb.dbo.sysmail_delete_mailitems_sp   
+    @sent_status = 'sent' ;
+    
+--Apagando log de todos emails com falha
+EXECUTE msdb.dbo.sysmail_delete_mailitems_sp   
+    @sent_status = 'failed' ;  
+
