@@ -27,13 +27,33 @@ dbcc loginfo;
 
 --Store Procedure do SQL Server, tráz informações de tamanho de objetos do Banco de Dados
 -- Quando executado sozinho, tráz as informações de tamanho do banco atual selecionado
-sp_spaceused 'Produto';
+sp_spaceused 'Produto'; Traz informações do Objeto
+sp_helptext 'sp_spaceused'; --verificar o spript de objetos do banco
+sp_databases -- Lista os Bancos e seu tamanho
+sp_helpdb 'NOME_BANCO'; -- Verificar informações do Banco
 
--- Store Procedure para verificar o spript de objetos do banco
-sp_helptext 'sp_spaceused'
+--INFORMAÇÕES DO OBJETOS
+select * from sys.objects --INFORMAÇÕES DO ALOCACOES DE ESPACO
+select * from sys.allocation_units --INFORMAÇÕES DO ALOCACOES DE ESPACO
+select * from sys.partitions --INFORMAÇÕES DO PARTICOES--REGISTROS POR TABELAS
 
--- Store Procedure para verificar informações do Banco
-sp_helpdb 'NOME_BANCO';
+-- Query usando as visualizações de  catalago anteriores para visualisar todas tabelas e suas informações de tamanho e armazenamento
+SELECT O.name AS NOME_TABELA,
+       p.Rows As Linhas,
+    SUM(a.Total_Pages * 8) As Reservado,
+    SUM(CASE WHEN p.Index_ID > 1 THEN 0 ELSE a.Data_Pages * 8 END) As Dados,
+        SUM(a.Used_Pages * 8) -
+        SUM(CASE WHEN p.Index_ID > 1 THEN 0 ELSE a.Data_Pages * 8 END) As Indice,
+    SUM((a.Total_Pages - a.Used_Pages) * 8) As NaoUtilizado
+FROM
+    sys.partitions As p
+    INNER JOIN sys.allocation_units As a 
+	ON p.hobt_id = a.container_id
+	INNER JOIN sys.objects O
+	ON O.object_id=P.object_id
+	WHERE O.type='U' -- TABELAS DO USUARIOS
+GROUP BY O.name,Rows
+ORDER BY dados desc;
 
 --Visualização de Usuários dos banco de Dados e Logins do Servidor
 select * from sys.sysusers;
@@ -50,6 +70,14 @@ select * from sys.sysdatabases;
 select * from sys.database_files;
 select file_id, type_desc, name, physical_name, state, size, max_size, growth
 from sys.database_files;
+
+-- Verificando Todos os arquivos dos Database pela visualização sysaltfiles;
+-- Realizado calculo com a coluna size
+select DB_NAME(dbid) bd,
+       cast(cast(size*8 as decimal(10,2))/1024. as decimal(10,3))tamanho,
+	   STR (size * 8, 15, 0) + ' KB' tamanho_str,
+	   name, filename
+	   from sysaltfiles;
 
 --Visualização que lista todos os processos executados independente de seu status
 --Por ela consigo pegar o hostname, banco, spid, program_name, usuário e diversas outras informações do processo
