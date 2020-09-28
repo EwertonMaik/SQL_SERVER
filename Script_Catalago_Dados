@@ -107,3 +107,20 @@ CREATE DATABASE [TestDB] ON
 ( FILENAME = N'C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\DATA\BD\Index.ndf' )
  FOR ATTACH
 GO
+
+--Definindo o AUTO_SHRINK do Banco de Dados OFF ou ON
+ALTER DATABASE TestDB SET AUTO_SHRINK OFF;
+ALTER DATABASE TestDB SET AUTO_SHRINK ON;
+
+--Realizando Shrink do Banco
+DBCC SHRINKDATABASE (TestDB, 10);
+
+--Truncando um banco de dados
+--O exemplo a seguir reduz os arquivos de dados no banco 
+--de dados de exemplo TestDB até a última extensão alocada.
+DBCC SHRINKDATABASE (TestDB, TRUNCATEONLY);
+
+--Reduzindo arquivo de dados
+use TestDB
+DBCC SHRINKFILE (TestDB, 10); --Reduzindo o Arquivos de Dados pelo seu nome Lógico
+DBCC SHRINKFILE (TestDB_Log, 5); --Reduzindo o Arquivos de Log pelo seu nome Lógico
