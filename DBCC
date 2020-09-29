@@ -113,3 +113,7 @@ SELECT plan_handle, st.text, *
 FROM sys.dm_exec_cached_plans   
 CROSS APPLY sys.dm_exec_sql_text(plan_handle) AS st  
 WHERE text LIKE N'SELECT * FROM Produto%'; 
+
+--Comando para resetar a chave Identity de uma tabela
+DBCC CHECKIDENT('Produto', RESEED, 0); -- Identity reiniciado para começar a partir de 1 agora
+DBCC CHECKIDENT('Produto', RESEED, 10); -- Identity reiniciado para começar a partir de 11 agora
