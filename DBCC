@@ -78,3 +78,32 @@ DBCC CHECKALLOC (TestDB) WITH NO_INFOMSGS, ALL_ERRORMSGS;
 DBCC CHECKALLOC (TestDB, REPAIR_FAST) WITH NO_INFOMSGS, ALL_ERRORMSGS;
 DBCC CHECKALLOC (TestDB, REPAIR_REBUILD) WITH NO_INFOMSGS, ALL_ERRORMSGS;
 DBCC CHECKALLOC (TestDB, REPAIR_ALLOW_DATA_LOSS) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+
+--##################################################################################################### MANUTENÇÃO
+--Recupera o espaço de colunas de comprimento variável descartadas em tabelas ou exibições indexadas.
+DBCC CLEANTABLE (TestDB, Produto)  WITH NO_INFOMSGS;
+
+--Reduz o tamanho dos arquivos de dados e de log do banco de dados especificado. 
+DBCC SHRINKDATABASE (TesteDB, 10); Reduz o tamanho dos arquivos de dados e de log e PERMITE 10 % ESPACO LIVRE.
+DBCC SHRINKDATABASE (TestDB, TRUNCATEONLY); -- Reduz o tamanho dos arquivos de dados e de log, Libera todo o espaço livre no final do arquivo para o sistema operacional.
+DBCC SHRINKFILE (TestDB_log, 10);  -- Reduz o arquivo de LOG TestDB_log do banco TestDB
+
+-- Traz informações de LOG de todos banco de dados
+DBCC SQLPERF(LOGSPACE);  
+GO
+
+--Faz um clone no mesmo ambiente apenas da estrutura do Banco de Dados
+DBCC CLONEDATABASE (TestDB, TestDB_CLONE_01); 
+GO
+
+--Faz um clone no mesmo ambiente apenas da estrutura do Banco de Dados (SEM ESTATÍSTICAS)
+DBCC CLONEDATABASE (TestDB, TestDB_CLONE_01) WITH NO_STATISTICS;    
+GO
+
+
+--limpa todos os elementos do cache do plano. A cláusula WITH NO_INFOMSGS é especificada para impedir a exibição da mensagem informativa.
+DBCC FREEPROCCACHE WITH NO_INFOMSGS;
+
+-- Limpando o cache de um plano especifico pego com
+DBCC FREEPROCCACHE (0x060006001ECA270EC0215D05000000000000000000000000);  
+GO 
