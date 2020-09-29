@@ -44,3 +44,37 @@ DBCC TRACESTATUS(-1); -- Traz os rastreadores Globais
 DBCC TRACESTATUS (2528, 3205); -- Consultando os dois sinalizadores Habilitados
 DBCC TRACEOFF  (2528, 3205);  -- Desabilitado os dois sinalizadores de rastreamento
 GO 
+
+
+--############################################################################################## VALIDAÇÃO
+DBCC CHECKDB (TestDB); -- Processa e traz todas as informações impressas no display de mensagem
+DBCC CHECKDB (TestDB) WITH NO_INFOMSGS, ALL_ERRORMSGS; -- Processa, não traz  informação, apenas todos os erros.
+
+USE MASTER
+ALTER DATABASE TestDB SET SINGLE_USER;
+DBCC CHECKDB (TestDB, REPAIR_FAST) WITH NO_INFOMSGS, ALL_ERRORMSGS; Processa com reparação rápida sem perda de dados, sem retorno de informação, apenas todos erros.
+
+DBCC CHECKDB (TestDB, REPAIR_REBUILD) WITH NO_INFOMSGS, ALL_ERRORMSGS; Processa rebuild sem perda de dados, sem retorno de informação, apenas todos erros.
+
+DBCC CHECKDB (TestDB, REPAIR_ALLOW_DATA_LOSS) WITH NO_INFOMSGS, ALL_ERRORMSGS; Processa reparação com perda de dados, sem retorno de informação, apenas todos erros.
+
+-- Verificando agora um CHECKTABLE, caso o problema identificado fosse diretamente especifico em uma tabela
+USE TestDB;
+GO
+DBCC CHECKTABLE (Produto); -- Processa e traz as informações sobre a tabela no display
+
+DBCC CHECKTABLE (Produto, REPAIR_FAST ) WITH NO_INFOMSGS, ALL_ERRORMSGS; --Processa reparação rápida, sem retorno de informação, apenas erro.
+
+DBCC CHECKTABLE (Produto, REPAIR_REBUILD ) WITH NO_INFOMSGS, ALL_ERRORMSGS; -- Processa reparação REBUILD, sem informação, apenas erro.
+
+DBCC CHECKTABLE (Produto, REPAIR_ALLOW_DATA_LOSS ) WITH NO_INFOMSGS, ALL_ERRORMSGS; Processa reparação com perda de DADOS, sem informação, apenas erro.
+
+--Inspeciona a integridade de uma restrição especificada ou de todas as restrições em uma tabela especificada no banco de dados atual.
+DBCC CHECKCONSTRAINTS;
+
+--Verifica a consistência de estruturas de alocação de espaço em disco para um banco de dados especificado
+DBCC CHECKALLOC;
+DBCC CHECKALLOC (TestDB) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+DBCC CHECKALLOC (TestDB, REPAIR_FAST) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+DBCC CHECKALLOC (TestDB, REPAIR_REBUILD) WITH NO_INFOMSGS, ALL_ERRORMSGS;
+DBCC CHECKALLOC (TestDB, REPAIR_ALLOW_DATA_LOSS) WITH NO_INFOMSGS, ALL_ERRORMSGS;
