@@ -35,4 +35,15 @@ WHERE object_id = OBJECT_ID('Produto');
 -- Não recomendado atualizar todas estatísticas de uma véz em um banco de Produção, dependendo de seu tamanho e concorrência de utilização.
 EXEC sp_updatestats;
 
---
+--Atualizando uma estatistica manualmente com Porcentagem de Amostragem de 100 %
+use [TestDB]
+GO
+UPDATE STATISTICS [dbo].[Produto] [IX_Produto_id_prod] WITH SAMPLE 100 PERCENT; -- Atualiza todas as Linhas 100%, pode ser de 0 à 100
+GO
+
+-- Atualizando uma estatistica manualmente, porém com a sintaxe ROWS - Linhas, vai de 0 até a quantidade de linhas da tabela
+use [TestDB]
+GO
+UPDATE STATISTICS [dbo].[Produto] [IX_Produto_id_prod] WITH SAMPLE 5 ROWS;
+GO
+
