@@ -1,0 +1,8 @@
+-- DBCC - Database Console Commands
+Divide-se em 4 Grupos
+
+1 - MANUTENÇÂO - Tarefas de manutenção de Banco de Dados, indeces e grupo de arquivos.
+2 - MISCELLANEOUS - Habilitar sinalizadores de restreamento ou remover DLL da memória.
+3 - INFORMAÇÔES - Tarefas que reunem e exibem vários tipos de informações.
+4 - VALIDAÇÃO - Operadores de validação do Banco de Dados, tabela, indece, catálago, grupo de arquivos ou alocação de paginas.
+
