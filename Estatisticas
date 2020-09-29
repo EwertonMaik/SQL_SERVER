@@ -1,0 +1,38 @@
+--Estatísticas (statistics ) são objetos que detêm informações importantes sobre a distribuição dos dados dentro de tabelas e views indexadas.
+Podem ser criadas manualmente, implicitamente e automaticamente pelo SQL Sever, no cado de criação de Index.
+
+--Vêm habilitado como Default no SQL Server, criação automática de estatísticas
+USE [master]
+GO
+ALTER DATABASE [TesteDB] SET AUTO_CREATE_STATISTICS ON;
+
+-- Desabilitando criação de estatísticas automaticas
+ALTER DATABASE [TestDB] SET AUTO_UPDATE_STATISTICS OFF WITH NO_WAIT;
+
+-- Especificar se as estatísticas são atualizadas de forma síncrona ou assíncrona
+ALTER DATABASE [TestDB] SET AUTO_UPDATE_STATISTICS_ASYNC ON WITH NO_WAIT  --ON OU OFF
+
+
+--Estatísticas criadas Implicitamente
+Quando é criado um INDEX CLUSTERED ou NOCLUSTERED, é criado a estatistica para os campos conforme informados.
+Quando é realizado um consulta em uma tabela e ela não tem estatistica nenhuma, é criado uma implicitamente, basedado nas condições e campos da query.
+
+-- Estatísticas criadas manualmente
+CREATE STATISTIC [IX_Produto_id_prod] ON dbo.Produto (id_prod);
+
+--É possível excluir uma Estatística
+DROP STATISTICS dbo.IX_Produto_id_prod;
+
+--Store Procedure que lista todas as Estatísticas da Tabela
+USE TestDB
+EXEC sp_helpstats 'Produto', 'all';
+
+--Esta visualização lista as estatísticas de uma tabela, porém com mais informações
+SELECT * FROM sys.stats 
+WHERE object_id = OBJECT_ID('Produto');
+
+--É executado UPDATE STATISTICS em todas as tabelas internas e definidas pelo usuário no banco de dados atual;
+-- Não recomendado atualizar todas estatísticas de uma véz em um banco de Produção, dependendo de seu tamanho e concorrência de utilização.
+EXEC sp_updatestats;
+
+--
