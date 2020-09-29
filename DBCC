@@ -1,8 +1,46 @@
 -- DBCC - Database Console Commands
 Divide-se em 4 Grupos
 
-1 - MANUTENÇÂO - Tarefas de manutenção de Banco de Dados, indeces e grupo de arquivos.
+1 - MANUTENÇÂO - Tarefas de manutenção de Banco de Dados, indIces e grupo de arquivos.
 2 - MISCELLANEOUS - Habilitar sinalizadores de restreamento ou remover DLL da memória.
 3 - INFORMAÇÔES - Tarefas que reunem e exibem vários tipos de informações.
 4 - VALIDAÇÃO - Operadores de validação do Banco de Dados, tabela, indece, catálago, grupo de arquivos ou alocação de paginas.
 
+
+--############################################################################################# INFORMAÇÃO
+--Traz a Sintase que é utilizado para o comando.
+DBCC HELP (TRACEON);
+DBCC HELP (CHECKTABLE);
+DBCC HELP (CHECKDB);
+DBCC HELP (PROCCACHE);
+DBCC HELP (OPENTRAN);
+DBCC HELP (SHOWCONTIG);
+DBCC HELP (SHOW_STATISTICS);
+
+DBCC SHOWCONTIG (Produto); --Exibe informações de fragmentação para os dados e índices da tabela ou exibição
+
+-- Duas formas de exibir as estatísticas de Index da Tabela Produto
+DBCC SHOW_STATISTICS (Produto,IX_Produto_id_prod);
+DBCC SHOW_STATISTICS (Produto,IX_Produto_id_prod) WITH HISTOGRAM;
+
+--Exibe informações em um formato de tabela sobre o cache de procedimento
+DBCC PROCCACHE;
+
+-- Traz informação da última transação aberta no banco de dados, pode sem ou com nome do parametro do banco;
+DBCC OPENTRAN ();
+DBCC OPENTRAN (TestDB);
+
+--############################################################################################# MISCELLANEOUS
+--Descarrega o procedimento armazenado estendido DLL especificado da memória
+DBCC nome_dll (FREE);
+
+-- Link MS com todas Trace Flags - Sinalizadores de Rastreamento do SQL Server, cada um possui um CÓDIGO especifico e um objetivo que rastreia
+https://docs.microsoft.com/pt-br/sql/t-sql/database-console-commands/dbcc-traceon-trace-flags-transact-sql?view=sql-server-2017#examples
+
+-- Sinalizadores de Rastreamento
+DBCC TRACEON  (2528, 3205);  Habilitando dois sinalizadores de rastreamento (2528, 3205)
+DBCC TRACESTATUS; --Exibe o status de sinalizadores de rastreamento
+DBCC TRACESTATUS(-1); -- Traz os rastreadores Globais
+DBCC TRACESTATUS (2528, 3205); -- Consultando os dois sinalizadores Habilitados
+DBCC TRACEOFF  (2528, 3205);  -- Desabilitado os dois sinalizadores de rastreamento
+GO 
