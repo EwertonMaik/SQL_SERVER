@@ -1,6 +1,10 @@
 -- Segue exemplo para criar e configurar um Job para rotina de Backup no SQl Server Agent
 https://www.linkedin.com/pulse/sql-server-criar-uma-job-via-ssms-ewerton-maik
 
+--Na instância do Servidor SQL Server, especificamente em GERENCIAMENTO \ PLANOS DE MANUTENÇÃO
+--É possível criar uma plano de manutenção para (Backup FULL, DIFF, LOG, Atualização de Estatísticas, Reorganize/ Rebuild Index,
+-- Limpeza de Histórico, Tarefa de Limpeza de Manutenção, Verificação de Integridade de Banco de Dados e Redução de Banco de Dados)
+-- Ao ser  criado um Plano de manutenção, é criado uma JOBque será gerenciada pelo serviço do SQL Server Agent. 
 
 -- Dentro do SQL Server Agent, é possível acompanhar a  execução e visualizar os registros de Logs em Monitor de Atividade do Trabalho e Logs de Erros
 
