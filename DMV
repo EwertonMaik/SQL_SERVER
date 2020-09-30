@@ -210,4 +210,21 @@ ORDER BY
     A.total_elapsed_time DESC;
     
     --####################################################################################################
-    
+--Verificando o caminho e qual o arquivo de Trace
+SELECT * FROM sys.traces;
+
+--verificando arquivo TRACE
+SELECT  TextData, 
+		SPID, 
+		LoginName, 
+		NTUserName, 
+		NTDomainName, 
+		HostName, 
+		ApplicationName, 
+		StartTime, ServerName, 
+		DatabaseName, 
+		EventClass, 
+		ObjectType
+FROM fn_trace_gettable('C:\SQLSERVER2019\Microsoft SQL Server\MSSQL15.MSSQLSERVER_01\MSSQL\Log\log_17.trc', default)
+where TextData is not null
+and LoginName='LAPTOP-5O9S38I5\Ewerton Maik';
