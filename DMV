@@ -136,7 +136,17 @@ FROM sys.dm_exec_connections a;
 SELECT datediff(MINUTE,a.login_time,GETDATE()) minutos_conectado,a.* 
 FROM sys.dm_exec_sessions a --where a.status = 'running';
  
--- Requisições solicitadas
+-- Requisições solicitadas / DMV Possui o campo com a informação sql_handle, que pode ser consultado para coletar a query executada em sys.dm_exec_sql_text
+--Exemplo no item (sql_handle).
 SELECT
-datediff(MINUTE, a.start_time, GETDATE() )minutos_conectado, a.*
+datediff(MINUTE, a.start_time, GETDATE() )minutos_conectado, a.sql_handle, a.*
 FROM sys.dm_exec_requests a --where a.status = 'running';
+
+--Visualização que lista todos os processos executados independente de seu status
+--Por ela consigo pegar o hostname, banco, spid, program_name, usuário e diversas outras informações do processo
+select sql_handle, * from sys.sysprocesses where status = 'runnable';
+
+-- (sql_handle) Com a query anterior, peguei o código da coluna sql_handle do processo executado
+-- E passei no parâmetro da dm - sys.dm_exec_sql_text que é uma função
+-- essa dm me retorna a query executada
+select * from sys.dm_exec_sql_text(0x01000500F16794215041801C3302000000000000);
