@@ -1,2 +1,21 @@
 -- Segue exemplo para criar e configurar um Job para rotina de Backup no SQl Server Agent
 https://www.linkedin.com/pulse/sql-server-criar-uma-job-via-ssms-ewerton-maik
+
+
+-- Dentro do SQL Server Agent, é possível acompanhar a  execução e visualizar os registros de Logs em Monitor de Atividade do Trabalho e Logs de Erros
+
+-- Verificando as JOBs existentes no ambiente peal visualização e Store Procedure
+Use MSDB
+GO
+select * from dbo.sysjobs;
+EXEC sp_help_jobactivity @job_name='ATUALIZA_ESTATISTICAS';
+
+-- Verificando o historico das JOBs pela visualização e pela Store Procedure
+GO
+select * from dbo.sysjobhistory;
+EXEC sp_help_jobhistory @job_name='ATUALIZA_ESTATISTICAS';
+
+--Visualizar o Agendamento da JOB via Store Procedure
+USE MSDB
+GO
+EXEC sp_help_jobschedule  @job_name='ATUALIZA_ESTATISTICAS';
