@@ -1,0 +1,19 @@
+-- Recurso do SQL Server para interligar Banco de Dados SQL Server a outro Banco de Dados,
+--seja SQL Server, ou de outras Tecnologia, como Oracle, PostgreSQL e demais Bancos do Mercado.
+-- Poder estar em na mesma ou distinta infraestrutura.
+
+-- Criando um Linked Server via Store Procedure em minha INSTÂNCIA 01, para acessar um Banco na INSTÂNCIA 02
+EXEC master.dbo.sp_addlinkedserver 
+        @server = N'LINK001',                  -- Nome do Linked Server
+				@srvproduct=N'',		                   -- Nome do produto da fonte de dados OLE DB
+				@provider=N'SQLNCLI',	                 -- É o identificador provedor OLE DB que corresponde a fonte de Dados (Cada banco tem seu Provedor - Cliente de Conexão)
+				@datasrc=N'SRV-DB-01\MSSQLSERVER002';  -- É o nome do Servidor e Instância que esse Linked irá acessar
+
+-- Especificando o Login que será usado para conectar na Instância\Banco via o Linked Server
+-- OBS - Esse Logon e Usuário deve existir no servidor de destino com os devidos acessos, para que a conexão obtenha sucesso.
+EXEC master.dbo.sp_addlinkedsrvlogin 
+        @rmtsrvname=N'LINK001',  -- Nome do Linked Server a qual esse usuário e senha vai usar para se conectar
+				@useself=N'False',
+				@locallogin=NULL,
+				@rmtuser=N'CONECTA',     -- Usuário da Conexão
+				@rmtpassword='CONECTA'   -- Senha da Conexão
