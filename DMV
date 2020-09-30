@@ -21,3 +21,24 @@ SECURITY RELATED                       SYS.DM_AUDIT_*/SYS.DM_CRYPTOGRAPHIC_*
 SERVICE BROKER RELATED                 SYS.DM_BROKER_*
 SQL SERVER OPERATING SYSTEM RELATED    SYS.DM_OS_*
 TRANSACTION RELATED                    SYS.DM_TRAN_*
+
+
+-- Querys a seguir usa a view ALL_OBJECTS para listar, contar e agrupar quantas DMV's seu ambiente possui
+-- Listando todas DMV's
+SELECT a.name, a.type_desc
+FROM SYS.all_objects a
+WHERE NAME LIKE ('dm%')
+order by a.name;
+
+--Lista o total de DMV's pelo tipo (VIEW e FUNCTION)
+SELECT a.type_desc, COUNT(*) as QTD
+FROM SYS.all_objects a
+WHERE NAME LIKE ('dm%')
+group by a.type_desc;
+
+--Lista o total de DMV's por categoria
+SELECT ISNULL(SUBSTRING(a.name,1,CHARINDEX('_',a.name,4)-1),'Total') MOME, COUNT(*) QTD
+FROM SYS.all_objects a
+WHERE NAME LIKE ('dm%')
+group by SUBSTRING(a.name,1,CHARINDEX('_',a.name,4)-1) with rollup
+order by 1 asc;
