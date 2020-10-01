@@ -152,3 +152,10 @@ DBCC SHRINKDATABASE (TestDB, TRUNCATEONLY);
 use TestDB
 DBCC SHRINKFILE (TestDB, 10); --Reduzindo o Arquivos de Dados pelo seu nome Lógico
 DBCC SHRINKFILE (TestDB_Log, 5); --Reduzindo o Arquivos de Log pelo seu nome Lógico
+
+--HABILITANDO ESTATISCAS DE INFORMACAO
+--Faz o SQL Server exibir informações referentes à quantidade de atividade em disco gerada pelas instruções Transact-SQL.
+SET STATISTICS io ON
+--Exibe o número de milissegundos necessários para analisar, compilar e executar cada instrução.
+SET STATISTICS time ON
+GO
