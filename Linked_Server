@@ -13,7 +13,22 @@ EXEC master.dbo.sp_addlinkedserver
 -- OBS - Esse Logon e Usuário deve existir no servidor de destino com os devidos acessos, para que a conexão obtenha sucesso.
 EXEC master.dbo.sp_addlinkedsrvlogin 
         @rmtsrvname=N'LINK001',  -- Nome do Linked Server a qual esse usuário e senha vai usar para se conectar
-				@useself=N'False',
-				@locallogin=NULL,
-				@rmtuser=N'CONECTA',     -- Usuário da Conexão
-				@rmtpassword='CONECTA'   -- Senha da Conexão
+	@useself=N'False',
+	@locallogin=NULL,
+	@rmtuser=N'CONECTA',     -- Usuário da Conexão
+	@rmtpassword='CONECTA'   -- Senha da Conexão
+
+--Dependendo das permissões do usuário, ele pode executar todos esses comandos que srão enviado para o determinado Banco do Linked Server
+SELECT * FROM LINK001.TestDB.dbo.Produto;
+INSERT INTO LINK001.TestDB.dbo.Produto (nm_prod, id_cad_prod) VALUES ('Produto Cadastrado via Linked Server', 1);
+UPDATE LINK001.TestDB.dbo.Produto SET nm_prod = 'PRATO 2' WHERE id_prod = 2;
+DELETE FROM LINK001.TestDB.dbo.Produto WHERE id_prod = 2;
+
+-- Verificando Linked Server cadastrados
+SELECT * FROM   sys.servers;
+
+--EXCLUINDO USUARIO LINKED SERVER
+EXEC sp_droplinkedsrvlogin @rmtsrvname='LINK001', @locallogin=NULL;
+
+--EXCLUINDO LINKED SERVER
+EXEC sp_dropserver @server=N'LINK001', @droplogins='droplogins';
