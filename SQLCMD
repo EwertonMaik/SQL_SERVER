@@ -53,5 +53,16 @@
 SQLCMD -S SRV_BD\MSSQLSERVER_01
 
 -- Conectando com Usuário e Senha
-SQLCMD -S LAPTOP-5O9S38I5\MSSQLSERVER_01 -U user_01 -P 123456789
+SQLCMD -S SRV_BD\MSSQLSERVER_01 -U user_02 -P 123456789
 
+-- Conectando com Usuário e Senha e Executando uma Query
+SQLCMD -S SRV_BD\MSSQLSERVER_01 -U user_02 -P 123456789 -d TestDB -q "SELECT id_prod, nm_prod, id_cat_prod, dt_cad_prod FROM dbo.Produto;"
+
+-- Esse comando conectá na instãncia e executará um Backup do Banco de Dados através do SCRIPT do parãmetro -i e criar e salva um arquivo de LOG
+-- Especificado no parâmetro -o
+SQLCMD -S LAPTOP-5O9S38I5\MSSQLSERVER_01  -i "C:\SQL2019\BK_AUTO.SQL" -o "C:\SQL2019\LOG_BAK.txt"
+
+--Esse comando do SQLCMD, salvo dentro de um arquivo .BAT do Windows como Comando_SQLCMD.bat e dentro do agendador de tarefas do Windows,
+--criado uma agenda para executar esse arquivo Comando_SQLCMD.bat.
+--Quando a agenda for iniciada, executará o comando interno do arquivo Comando_SQLCMD.bat que chama internamente a script de -i "C:\SQL2019\BK_AUTO.SQL"
+--E salva o log em -o "C:\SQL2019\LOG_BAK.txt"
