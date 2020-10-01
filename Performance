@@ -1,0 +1,39 @@
+-- Entendendo a Ordem de processamento Lógigo do SQL Server
+
+1 - FROM
+2 - ON
+3 - JOIN
+4 - WHERE
+5 - GROUP BY
+6 - WITH CUBE ou WITH ROLLUP
+7 - HAVING
+8 - SELECT
+9 - DISTINCT
+10 - ORDER BY
+11 - INÍCIO
+
+5 - SELECT <CAMPOS>
+1 - FROM   <TABELAS>
+2 - WHERE  <FILTROS>
+3 - GROUP BY <CAMPOS AGREGADOS>
+4 - HAVING   <FILTROS AGREGADOS>
+6 - ORDER BY <ORDENAÇÃO CAMPOS>
+
+-- Boas praticas que ajudam no desenvolvimento de obter melhor performance
+1. Armazene as informações relevantes e necessárias no banco de dados em vez de estrutura ou matriz de aplicativos.
+2. Use tabelas normalizadas no banco de dados. Tabelas menores são melhores do que tabelas normalizadas genéricas, o que as tornam grandes.
+3. Use números ao invés de strings para ID’s nas tabelas.
+4. Mantenha a chave primária de caracteres menores ou inteiros . É mais fácil processar chaves de pequena largura.
+5. Armazene caminhos de imagem ou URLs no banco de dados em vez de imagens. Tem menos sobrecarga.
+6. Use tipos de banco de dados apropriados para os campos . Se data_log no banco de dados é arquivado para usar data e hora como tipos de dados, não use VARCHAR (20).
+7. Especifique nomes de colunas em vez de usar na instrução SELECT.
+8. Use a cláusula LIKE adequadamente. Se você estiver procurando a correspondência exata use em vez disso.
+9. Escreva as palavra chave do SQL em letras maiúsculas para fins de legibilidade.
+10. Usar JOIN é melhor para desempenho do que usando sub consultas ou consultas aninhadas
+11. Utilize Stored Procedures, Functions ou views . Elas são mais rápidas e ajudam na manutenção e segurança do banco de dados.
+12. Criação de index adequada melhora a velocidade das operações no banco de dados.
+13. Analyse Query in Database Engine Tuning Advisor
+14. Keywords que você deve usar(TOP, DISTINCT , COUNT)
+15. Keywords que você deve evitar (LIKE,
+16. LOCK ou NOLOCK
+17. Execute e Analise Plano de execução.
