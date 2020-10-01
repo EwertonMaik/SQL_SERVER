@@ -48,3 +48,10 @@
 -z new_password
 -Z new_password ( and exit )
 -? (usage)
+
+--Comando para conectar na instância, conexão confiavél, sem usuário e senha (Permitido apenas dentro Prompt de Comando dentro do Servidor da Instância\Banco)
+SQLCMD -S SRV_BD\MSSQLSERVER_01
+
+-- Conectando com Usuário e Senha
+SQLCMD -S LAPTOP-5O9S38I5\MSSQLSERVER_01 -U user_01 -P 123456789
+
