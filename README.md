@@ -1,7 +1,7 @@
-# SQL_SERVER
-Scripts Banco de Dados SQL Server
+# Scripts Banco de Dados SQL SERVER
 
 1  - Scripts de Backup e Restore
+
 2  - Scripts de Database Console Commands (DBCC)
 3  - Scripts de Linguagem de Controle de Dados (DCL)
 4  - Scripts de Linguagem de Modelo de Dados e Linguagem de Definição de Dados (DML DDL)
