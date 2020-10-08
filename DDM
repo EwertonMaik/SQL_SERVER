@@ -3,7 +3,7 @@
 -- DDM - Máscara de Dados Dinâmica
 --SQL Server - O DDM apresenta funções de máscara completa e parcial e uma máscara aleatória
 
---Tem 4 tipos de função para macaramento
+--Tem 4 tipos de função para Mascaramento
 --Padrão
 Phone# varchar(12) MASKED WITH (FUNCTION = 'default()') NULL;
 ALTER TABLE (TABELA) ALTER COLUMN (COLUNA) ADD MASKED WITH (FUNCTION = 'default()');
