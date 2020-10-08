@@ -1,0 +1,5 @@
+--https://docs.microsoft.com/pt-br/sql/relational-databases/security/dynamic-data-masking?view=sql-server-ver15
+
+-- DDM - Máscara de Dados Dinâmica
+--SQL Server - O DDM apresenta funções de máscara completa e parcial e uma máscara aleatória
+
