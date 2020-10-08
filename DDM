@@ -3,3 +3,115 @@
 -- DDM - Máscara de Dados Dinâmica
 --SQL Server - O DDM apresenta funções de máscara completa e parcial e uma máscara aleatória
 
+--Tem 4 tipos de função para macaramento
+--Padrão
+Phone# varchar(12) MASKED WITH (FUNCTION = 'default()') NULL;
+ALTER TABLE (TABELA) ALTER COLUMN (COLUNA) ADD MASKED WITH (FUNCTION = 'default()');
+
+--Email
+Email varchar(100) MASKED WITH (FUNCTION = 'email()') NULL;
+ALTER TABLE (TABELA) ALTER COLUMN (COLUNA) ADD MASKED WITH (FUNCTION = 'email()');
+
+--Aleatório
+Account_Number bigint MASKED WITH (FUNCTION = 'random([start range], [end range])');
+ALTER TABLE (TABELA) ALTER COLUMN (COLUNA) ADD MASKED WITH (FUNCTION = 'random(1, 12)');
+
+--Cadeia de Carecteres Personalizada
+FirstName varchar(100) MASKED WITH (FUNCTION = 'partial(prefix,[padding],suffix)') NULL;
+ALTER TABLE (TABELA) ALTER COLUMN (COLUNA) ADD MASKED WITH (FUNCTION = 'partial(1,"XXXXXXX",0)');
+
+--- Simulando um Exemplo de Dados Mascarados
+USE TestDB
+GO
+
+-- Criado a Tabela Cliente e utilizando Mascara de Dados nos campos Primeiro_nome, telefone e e-mail
+CREATE TABLE CLIENTE (
+   ID_CLIENTE     int IDENTITY PRIMARY KEY,  
+   Primeiro_nome  varchar(100) MASKED WITH (FUNCTION = 'partial(1,"XXXXXXX",0)') NOT NULL,  
+   Ultimo_nome    varchar(100) NOT NULL,  
+   telefone       varchar(12)  MASKED WITH (FUNCTION = 'default()') NULL,  
+   Email          varchar(100) MASKED WITH (FUNCTION = 'email()') NULL, 
+   cartao_credito varchar(20)  NOT NULL,  
+   salario        decimal(10,2)NOT NULL) ;  
+
+-- Inserindo alguns Dados na Tabela Cliente
+INSERT CLIENTE VALUES   
+('Andre', 'Rosa', '555.123.4567', 'andrer@teste.com','1111-2222-3333-4444',12000),  
+('Pedro', 'Silva', '555.123.4568', 'pedros@teste.com','1234-4321-9632-7411',9000),  
+('Mariana', 'Souza', '555.123.4569', 'marianas@teste.net','1234-4321-9632-7411',15000);  
+
+--Consultado Dados Tabela Cliente
+SELECT * FROM dbo.CLIENTE;
+
+--Criando Roles de Banco de Dados
+  create role vendedores_com_acesso;
+  create role vendedores_sem_mask;
+  create role vendedores_sem_acesso;
+
+--Criando Usuários Sem LOGIN, apenas para teste das Consultas
+  CREATE USER  JOAO  WITHOUT LOGIN; 
+  CREATE USER  PEDRO WITHOUT LOGIN; 
+  CREATE USER  PAULO WITHOUT LOGIN;
+
+--Usando a Store Procedure para adicionar Membros/Usuários a ela
+EXEC sp_addrolemember 'vendedores_com_acesso', 'JOAO';
+EXEC sp_addrolemember 'vendedores_com_acesso', 'PEDRO';
+
+EXEC sp_addrolemember 'vendedores_sem_mask', 'PEDRO';
+
+EXEC sp_addrolemember 'vendedores_sem_acesso', 'PAULO';
+
+
+--Aplicando Permissões que a ROLE ira possuir
+GRANT SELECT ON CLIENTE TO vendedores_com_acesso; -- Role terá acesse de SELECT apenas na tabela CLIENTE, Porém não verá os dados Mascarados
+
+GRANT UNMASK TO vendedores_sem_mask; -- Role tera acesso UNMASK, podendo ver dados que foram Mascarados
+
+DENY SELECT ON CLIENTE TO vendedores_sem_acesso; -- Role tem acesso Negado de SELECT na tabela CLIENTE
+
+--Realizando Validação de consulta com o Users Criados
+EXECUTE AS USER = 'JOAO';
+SELECT * FROM dbo.CLIENTE; -- Lista e visualiza os registros mascarados 
+REVERT;  
+
+EXECUTE AS USER = 'PEDRO';  
+SELECT * FROM dbo.CLIENTE; -- Lista e visualiza os registros sem máscara
+REVERT;  
+
+EXECUTE AS USER = 'PAULO';  
+SELECT * FROM CLIENTE; -- Não lista nada, Este user teve acesso Negado
+REVERT;  
+
+--Query para Listar as Tabelas/ Campos que possuem Dados Mascarados
+SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  
+FROM sys.masked_columns AS c  
+JOIN sys.tables AS tbl   
+    ON c.[object_id] = tbl.[object_id]  
+WHERE is_masked = 1;  
+
+--Adicionando Mascaras a tabela depois de Criada via Alter Table
+ALTER TABLE CLIENTE ALTER COLUMN ULTIMO_NOME ADD MASKED WITH (FUNCTION = 'partial(2,"XXXXXXX",0)'); --Máscara Ultimo_nome
+ALTER TABLE CLIENTE ALTER COLUMN TELEFONE    ADD MASKED WITH (FUNCTION = 'partial(5,"XXXXXXX",0)'); --Máscara Telefone
+ALTER TABLE CLIENTE ALTER COLUMN CARTAO_CREDITO ADD MASKED WITH (FUNCTION = 'partial(0,"XXXX-XXXX-XXXX-",4)'); --Máscara cartao_credito
+ALTER TABLE CLIENTE ALTER COLUMN SALARIO ADD MASKED WITH (FUNCTION = 'default()'); --Máscara salario
+
+--Validando acesso novamente, e verificando os demais campos que foram Mascarados
+EXECUTE AS USER = 'JOAO';  
+SELECT * FROM dbo.CLIENTE;  
+REVERT;  
+
+EXECUTE AS USER = 'PEDRO';  
+SELECT * FROM CLIENTE; 
+REVERT;  
+
+EXECUTE AS USER = 'PAULO';  
+SELECT * FROM CLIENTE; 
+REVERT;  
+
+--Usando Store Procedure para remover membros/users da role;
+EXEC sp_droprolemember 'vendedores_sem_mask', 'PEDRO';
+
+--Validando acesso para o Pedro que tinha acesso de ver dados Mascarados e agora foi removido darole
+EXECUTE AS USER = 'pedro';  
+SELECT * FROM CLIENTE; 
+REVERT;  
