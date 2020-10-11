@@ -1,4 +1,4 @@
-# Scripts Banco de Dados SQL SERVER
+# Scripts Banco de Dados SQL# SERVER
 
 1  - Scripts de Backup e Restore
 
