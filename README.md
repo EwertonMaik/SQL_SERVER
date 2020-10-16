@@ -34,14 +34,16 @@
 
 17 - Scripts de Linguagem de Controle de Transação
 
-# Estrutura Física
+# Estrutura Física (O que é visível para os Administradores)
 Arquivos de Dados (.mdf .ndf .ldf)
 
-1 - .mdf : Arquivo Primário do Banco de Dados chamado de Master Data File, contem toda a estrutura primária do Banco de Dados
+1 - .mdf : Arquivo Primário do Banco de Dados chamado de Master Data File, contem toda a estrutura primária do Banco de Dados.
 
 2 - .ndf : Arquivo Secundário do Banco de Dados chamado Secondary Data File, recomendado para armazenar os dados dos sistemas e aplicações, para não concorrer ou ficar no mesmo arquivo do .mdf Primário.
 
-3 - .ldf : Arquivo de Log, chamado Log Data File, contêm todos os Lods de Transação do Banco de Dados
+3 - .ldf : Arquivo de Log, chamado Log Data File, contêm todos os Logs de Transação do Banco de Dados
 
-# Estrutura Lógica
+# Estrutura Lógica (O que é visível para os Desenvolvedores)
+São as estruturas que agrupam e organizam as estruturas do Banco de Dados (FileGroup, Tabela, Esquema e demais objetos do Banco de Dados)
 
+1 - FileGroup - Coleções nomeadas de arquivos de Dados. Um arquivo (.mdf tem seu FileGroup padrão chamado PRIMARY, os .ndf podem ser agrupados ao FileGroup PRIMARY ou a outros FGs criados).
