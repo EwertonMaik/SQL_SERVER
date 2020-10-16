@@ -33,3 +33,15 @@
 16 - Scripts de Catalago de Dados
 
 17 - Scripts de Linguagem de Controle de Transação
+
+# Estrutura Física
+Arquivos de Dados (.mdf .ndf .ldf)
+
+1 - .mdf : Arquivo Primário do Banco de Dados chamado de Master Data File, contem toda a estrutura primária do Banco de Dados
+
+2 - .ndf : Arquivo Secundário do Banco de Dados chamado Secondary Data File, recomendado para armazenar os dados dos sistemas e aplicações, para não concorrer ou ficar no mesmo arquivo do .mdf Primário.
+
+3 - .ldf : Arquivo de Log, chamado Log Data File, contêm todos os Lods de Transação do Banco de Dados
+
+# Estrutura Lógica
+
