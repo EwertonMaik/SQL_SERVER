@@ -108,6 +108,11 @@ SELECT SERVERPROPERTY('productversion')Versao_Produto,
 	     SERVERPROPERTY('IsHadrEnabled')HADR,
 	     SERVERPROPERTY('LCID')LOCALIZACAO,
 	     SERVERPROPERTY('ServerName')SERVERNAME
+	     
+SELECT SERVERPROPERTY ( 'LicenseType'), SERVERPROPERTY ( 'NumLicenses'),
+SERVERPROPERTY ( 'productversion'), SERVERPROPERTY ( 'ProductLevel'), SERVERPROPERTY ( 'Edition');
+
+arquivo - sqlslic.cpl na pasta do servidor SQL (C: \ Arquivos de Programas \ Microsoft SQL Server \ 80 \ Tools \ Binn)
 
 -- Procedure que traz informação de permissão do usuário
 EXEC dbo.sp_helprotect @username = 'dbo';
