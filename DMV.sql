@@ -245,3 +245,12 @@ SELECT * FROM SYS.dm_hadr_availability_replica_states
 --NÓS DO CLUSTER
 SELECT * FROM SYS.dm_hadr_availability_replica_cluster_nodes
 
+-- QUERY PARA LISTAR AS TABELAS DO BANCO DE DADOS E QUANTAS LINHAS POSSUEM
+select
+    schema_name(schema_id) as 'owner',
+    tabelas.name as 'tabela',
+    sum(partitions.rows) as 'linhas'
+from sys.tables as tabelas
+join sys.partitions as partitions on tabelas.object_id = partitions.object_id and partitions.index_id in (0,1)
+group by schema_name(schema_id), tabelas.name
+order by 3 desc
