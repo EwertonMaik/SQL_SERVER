@@ -29,3 +29,5 @@
 
 * São as estruturas que agrupam e organizam as estruturas do Banco de Dados (FileGroup, Tabela, Esquema e demais objetos do Banco de Dados)
 * 1 - FileGroup - Coleções nomeadas de arquivos de Dados. Um arquivo (.mdf tem seu FileGroup padrão chamado PRIMARY, os .ndf podem ser agrupados ao FileGroup PRIMARY ou a outros FGs criados).
+
+# https://db-engines.com/en/
